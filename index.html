@@ -236,7 +236,15 @@
   </section>
 
 
-  <section>
+  <section style="text-align:center;">
+    <button class="btn-google" onclick="mostrarTrabajos()">📸 Ver trabajos realizados</button>
+  </section>
+
+  <div id="seccionTrabajos" style="display:none;">
+    <div style="text-align:center;padding:20px 0;">
+      <button class="btn-salir" onclick="ocultarTrabajos()">← Volver</button>
+    </div>
+    <section>
     <h2 class="titulo-sec">Trabajos realizados</h2>
     <div class="grid">
       <div class="card" style="padding:0;overflow:hidden;">
@@ -253,6 +261,7 @@
       </div>
     </div>
   </section>
+  </div>
 
 
   <section>
@@ -355,6 +364,15 @@
   }
   function cerrarFoto(){
     document.getElementById('lightbox').style.display = 'none';
+  }
+
+  function mostrarTrabajos(){
+    document.getElementById('seccionTrabajos').style.display = 'block';
+    document.getElementById('seccionTrabajos').scrollIntoView({behavior:'smooth'});
+  }
+  function ocultarTrabajos(){
+    document.getElementById('seccionTrabajos').style.display = 'none';
+    window.scrollTo({top:0, behavior:'smooth'});
   }
 </script>
 
