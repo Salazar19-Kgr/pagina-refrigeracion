@@ -240,19 +240,50 @@
     <h2 class="titulo-sec">Trabajos realizados</h2>
     <div class="grid">
       <div class="card" style="padding:0;overflow:hidden;">
-        <img src="https://i.postimg.cc/fJj47JGL/IMG-20260724-WA0123.jpg" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;">
+        <img src="https://i.postimg.cc/fJj47JGL/IMG-20260724-WA0123.jpg" onclick="abrirFoto(this.src)" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;cursor:pointer;">
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
-        <img src="https://i.postimg.cc/D8dVQ89S/IMG-20260903-184927-439.jpg" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;">
+        <img src="https://i.postimg.cc/D8dVQ89S/IMG-20260903-184927-439.jpg" onclick="abrirFoto(this.src)" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;cursor:pointer;">
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
-        <img src="https://i.postimg.cc/HV4G0Vqn/IMG-20260905-WA0106.jpg" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;">
+        <img src="https://i.postimg.cc/HV4G0Vqn/IMG-20260905-WA0106.jpg" onclick="abrirFoto(this.src)" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;cursor:pointer;">
       </div>
       <div class="card" style="padding:0;overflow:hidden;">
-        <img src="https://i.postimg.cc/4mbCvmD4/IMG-20260905-WA0107.jpg" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;">
+        <img src="https://i.postimg.cc/4mbCvmD4/IMG-20260905-WA0107.jpg" onclick="abrirFoto(this.src)" style="width:100%;display:block;border-radius:18px;object-fit:cover;height:260px;cursor:pointer;">
       </div>
     </div>
   </section>
+
+
+  <section>
+    <h2 class="titulo-sec">¿Por qué confiar en nosotros?</h2>
+    <div class="grid">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;">✅</div>
+        <h3 style="justify-content:center;">Servicio Garantizado</h3>
+        <p style="color:#cfe4f0;font-size:.9rem;">Todo trabajo realizado cuenta con garantía de satisfacción.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;">🔧</div>
+        <h3 style="justify-content:center;">Técnico Experimentado</h3>
+        <p style="color:#cfe4f0;font-size:.9rem;">Años de experiencia reparando equipos de refrigeración.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;">⚡</div>
+        <h3 style="justify-content:center;">Atención Rápida</h3>
+        <p style="color:#cfe4f0;font-size:.9rem;">Respuesta ágil ante cualquier solicitud.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem;">💵</div>
+        <h3 style="justify-content:center;">Precios Justos</h3>
+        <p style="color:#cfe4f0;font-size:.9rem;">Tarifas claras y accesibles, sin sorpresas.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="lightbox" onclick="cerrarFoto()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center;padding:20px;">
+    <img id="lightboxImg" src="" style="max-width:100%;max-height:90vh;border-radius:12px;box-shadow:0 0 40px rgba(0,229,255,.4);">
+  </div>
 
   <footer>© 2026 Refrigeración Barinas. Todos los derechos reservados.</footer>
 </div>
@@ -311,12 +342,20 @@
       alert('Por favor ingresa tu número de teléfono');
       return;
     }
-    var numeroTecnico = '584129562860';
+    var numeroTecnico = '584245095002';
     var mensaje = 'Nueva solicitud - Refrigeracion Barinas%0AEquipo: ' + encodeURIComponent(equipo) + '%0ATelefono del cliente: ' + encodeURIComponent(tel) + '%0ADetalles: ' + encodeURIComponent(detalles);
     var link = 'https://wa.me/' + numeroTecnico + '?text=' + mensaje;
     window.open(link, '_blank');
     document.getElementById('mensajeExito').style.display = 'block';
   });
+
+  function abrirFoto(src){
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').style.display = 'flex';
+  }
+  function cerrarFoto(){
+    document.getElementById('lightbox').style.display = 'none';
+  }
 </script>
 
 </body>
