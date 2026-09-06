@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refrigeración Barinas</title>
+<style>
+  :root{
+    --azul:#00e5ff;
+    --azul2:#0072ff;
+    --fondo:#050914;
+    --card:#0e1830;
+    --texto:#e8f6ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:var(--fondo);
+    color:var(--texto);
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  .fondo-animado{
+    position:fixed;inset:0;z-index:-1;
+    background:radial-gradient(circle at 20% 20%, #062040 0%, #050914 55%),
+               radial-gradient(circle at 80% 70%, #001a33 0%, transparent 60%);
+  }
+  .fondo-animado::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(120deg,transparent,rgba(0,229,255,.06),transparent);
+    animation:barrido 6s linear infinite;
+  }
+  @keyframes barrido{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+  header{
+    text-align:center;padding:70px 20px 40px;
+  }
+  header h1{
+    font-size:2.4rem;
+    background:linear-gradient(90deg,var(--azul),var(--azul2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 25px rgba(0,229,255,.3);
+  }
+  header p{
+    max-width:560px;margin:16px auto 0;color:#a9c4d6;font-size:1.05rem;line-height:1.5;
+  }
+  .btn-google{
+    margin-top:28px;
+    display:inline-flex;align-items:center;gap:10px;
+    background:#fff;color:#333;border:none;
+    padding:12px 26px;border-radius:40px;font-weight:600;
+    cursor:pointer;box-shadow:0 0 20px rgba(0,229,255,.35);
+    transition:.25s;
+    font-size:1rem;
+  }
+  .btn-google:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,229,255,.6);}
+
+  .barra-usuario{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    padding:16px 20px;flex-wrap:wrap;
+  }
+  .barra-usuario img{
+    width:40px;height:40px;border-radius:50%;border:2px solid var(--azul);
+  }
+  .barra-usuario span{color:#cfe4f0;font-size:.95rem;}
+  .btn-salir{
+    background:transparent;border:1px solid rgba(0,229,255,.4);
+    color:var(--azul);padding:8px 16px;border-radius:20px;
+    cursor:pointer;font-size:.85rem;transition:.2s;
+  }
+  .btn-salir:hover{background:rgba(0,229,255,.1);}
+
+  section{padding:40px 20px;max-width:1100px;margin:0 auto;}
+  .titulo-sec{
+    text-align:center;font-size:1.6rem;margin-bottom:30px;color:var(--azul);
+    text-shadow:0 0 12px rgba(0,229,255,.4);
+  }
+
+  .grid{
+    display:grid;grid-template-columns:1fr;gap:18px;
+  }
+  @media(min-width:700px){.grid{grid-template-columns:1fr 1fr;}}
+
+  .card{
+    background:linear-gradient(145deg,var(--card),#0a1220);
+    border:1px solid rgba(0,229,255,.15);
+    border-radius:18px;padding:22px;
+    backdrop-filter:blur(6px);
+    transition:.3s;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(0,229,255,.5);
+    box-shadow:0 8px 30px rgba(0,229,255,.15);
+  }
+  .card h3{
+    color:var(--azul);font-size:1.15rem;margin-bottom:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card ul{list-style:none;}
+  .card li{
+    display:flex;justify-content:space-between;
+    padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.08);
+    font-size:.95rem;color:#cfe4f0;
+  }
+  .card li:last-child{border-bottom:none;}
+  .card li span.precio{
+    color:#4bffb0;font-weight:700;white-space:nowrap;margin-left:10px;
+  }
+
+  .form-card{
+    background:var(--card);border:1px solid rgba(0,229,255,.2);
+    border-radius:18px;padding:30px;max-width:520px;margin:0 auto;
+  }
+  .form-card label{display:block;margin:14px 0 6px;color:#9fd7ea;font-size:.9rem;}
+  .form-card select,.form-card input,.form-card textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.25);
+    background:#081222;color:var(--texto);font-size:1rem;outline:none;
+  }
+  .form-card select:focus,.form-card input:focus,.form-card textarea:focus{
+    border-color:var(--azul);box-shadow:0 0 10px rgba(0,229,255,.3);
+  }
+  .form-card textarea{min-height:100px;resize:vertical;}
+  .btn-enviar{
+    margin-top:22px;width:100%;padding:14px;border:none;border-radius:12px;
+    background:linear-gradient(90deg,var(--azul),var(--azul2));
+    color:#04101c;font-weight:700;font-size:1rem;cursor:pointer;
+    transition:.25s;
+  }
+  .btn-enviar:hover{filter:brightness(1.1);transform:translateY(-2px);}
+
+  #mensajeExito{
+    display:none;margin-top:18px;padding:14px;border-radius:10px;
+    background:rgba(75,255,176,.12);border:1px solid rgba(75,255,176,.4);
+    color:#4bffb0;text-align:center;font-size:.95rem;
+  }
+
+  footer{
+    text-align:center;padding:30px;color:#5f7a8c;font-size:.85rem;
+  }
+
+  #pantallaLogin{min-height:90vh;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+</style>
+</head>
+<body>
+
+<div class="fondo-animado"></div>
+
+<!-- PANTALLA DE LOGIN (se ve primero) -->
+<div id="pantallaLogin">
+  <header>
+    <h1>❄️ Refrigeración Barinas</h1>
+    <p>¡Bienvenido! Aquí encontrarás las mejores opciones y soluciones para resolver cualquier tema relacionado con tu equipo de refrigeración.</p>
+    <button class="btn-google" id="btnGoogle">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.4C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.5 5.4C41.5 36 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+      Iniciar sesión con Google
+    </button>
+  </header>
+</div>
+
+<!-- CONTENIDO DE LA APP (se muestra solo tras iniciar sesión) -->
+<div id="contenidoApp" style="display:none;">
+
+  <div class="barra-usuario">
+    <img id="fotoUsuario" src="" alt="foto">
+    <span id="nombreUsuario"></span>
+    <button class="btn-salir" id="btnSalir">Cerrar sesión</button>
+  </div>
+
+  <section>
+    <h2 class="titulo-sec">Nuestros servicios</h2>
+    <div class="grid">
+
+      <div class="card">
+        <h3>🌀 Aire acondicionado Split</h3>
+        <ul>
+          <li>Mantenimiento (12000–24000 BTU) <span class="precio">$40 – $60</span></li>
+          <li>Instalación de split nuevo <span class="precio">$50</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🪟 Aire acondicionado de ventana</h3>
+        <ul>
+          <li>Mantenimiento / revisión <span class="precio">$30</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🧊 Neveras</h3>
+        <ul>
+          <li>Cambio de motor (mano de obra) <span class="precio">$40</span></li>
+          <li>Sistema eléctrico (reloj, resistencia, bimetálico, tarjeta) <span class="precio">$25 – $70</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🌀 Lavadoras</h3>
+        <ul>
+          <li>Mantenimiento <span class="precio">$30</span></li>
+          <li>Reparación / reemplazo de componentes <span class="precio">$30 – $70</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🔧 Otros equipos de refrigeración</h3>
+        <ul>
+          <li>Servicio técnico general <span class="precio">$20</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2 class="titulo-sec">¿Tu equipo está fallando?</h2>
+    <div class="form-card">
+      <label for="equipo">Selecciona el equipo dañado</label>
+      <select id="equipo">
+        <option>Aire acondicionado Split</option>
+        <option>Aire acondicionado de ventana</option>
+        <option>Nevera</option>
+        <option>Lavadora</option>
+        <option>Otro equipo de refrigeración</option>
+      </select>
+
+      <label for="telefono">Tu número de teléfono</label>
+      <input type="tel" id="telefono" placeholder="0412-1234567">
+
+      <label for="detalles">Cuéntanos qué le pasa al equipo</label>
+      <textarea id="detalles" placeholder="Ej: la nevera no enfría desde hace 2 días..."></textarea>
+
+      <button class="btn-enviar" id="btnEnviar">Enviar mi solicitud</button>
+      <div id="mensajeExito">✅ Tus detalles han sido reportados al número privado del técnico. El técnico se pondrá en contacto contigo pronto.</div>
+    </div>
+  </section>
+
+  <footer>Refrigeración Barinas · Estado Barinas, Venezuela</footer>
+</div>
+
+<!-- SDK de Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+  // Configuración de tu proyecto de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-IogS5CTtkNf0Z9NAmed6WgiwWo_Zioc",
+    authDomain: "refrigeracion-barinas-gv.firebaseapp.com",
+    projectId: "refrigeracion-barinas-gv",
+    storageBucket: "refrigeracion-barinas-gv.firebasestorage.app",
+    messagingSenderId: "258676469624",
+    appId: "1:258676469624:web:bc06795d895841dcd8228d"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  const pantallaLogin = document.getElementById('pantallaLogin');
+  const contenidoApp = document.getElementById('contenidoApp');
+  const fotoUsuario = document.getElementById('fotoUsuario');
+  const nombreUsuario = document.getElementById('nombreUsuario');
+
+  document.getElementById('btnGoogle').addEventListener('click', function(){
+    auth.signInWithPopup(provider).catch(function(error){
+      alert('No se pudo iniciar sesión: ' + error.message);
+    });
+  });
+
+  document.getElementById('btnSalir').addEventListener('click', function(){
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      pantallaLogin.style.display = 'none';
+      contenidoApp.style.display = 'block';
+      fotoUsuario.src = user.photoURL || '';
+      nombreUsuario.textContent = 'Hola, ' + (user.displayName || 'usuario');
+    } else {
+      pantallaLogin.style.display = 'flex';
+      contenidoApp.style.display = 'none';
+    }
+  });
+
+  document.getElementById('btnEnviar').addEventListener('click', function(){
+    var tel = document.getElementById('telefono').value.trim();
+    var equipo = document.getElementById('equipo').value;
+    var detalles = document.getElementById('detalles').value.trim();
+    if(!tel){
+      alert('Por favor ingresa tu número de teléfono');
+      return;
+    }
+    var numeroTecnico = '584129562860';
+    var mensaje = 'Nueva solicitud - Refrigeracion Barinas%0AEquipo: ' + encodeURIComponent(equipo) + '%0ATelefono del cliente: ' + encodeURIComponent(tel) + '%0ADetalles: ' + encodeURIComponent(detalles);
+    var link = 'https://wa.me/' + numeroTecnico + '?text=' + mensaje;
+    window.open(link, '_blank');
+    document.getElementById('mensajeExito').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
