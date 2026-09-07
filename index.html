@@ -6,11 +6,11 @@
 <title>Refrigeración Barinas</title>
 <style>
   :root{
-    --azul:#00e5ff;
-    --azul2:#0072ff;
-    --fondo:#050914;
-    --card:#0e1830;
-    --texto:#e8f6ff;
+    --azul:#7fd8ff;
+    --azul2:#3aa8ff;
+    --fondo:#04101f;
+    --card:#0c2038;
+    --texto:#eaf7ff;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -22,8 +22,8 @@
   }
   .fondo-animado{
     position:fixed;inset:0;z-index:-1;
-    background:radial-gradient(circle at 20% 20%, #062040 0%, #050914 55%),
-               radial-gradient(circle at 80% 70%, #001a33 0%, transparent 60%);
+    background:radial-gradient(circle at 20% 20%, #0d3a63 0%, #04101f 55%),
+               radial-gradient(circle at 80% 70%, #0a2c4d 0%, transparent 60%);
   }
   .fondo-animado::before{
     content:"";position:absolute;inset:0;
@@ -140,11 +140,19 @@
   }
 
   #pantallaLogin{min-height:90vh;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+
+  .copos-nieve{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .copo{position:absolute;top:-10px;color:#dff4ff;opacity:.8;user-select:none;animation:caer linear infinite;}
+  @keyframes caer{
+    0%{transform:translateY(-10vh) translateX(0);}
+    100%{transform:translateY(110vh) translateX(20px);}
+  }
 </style>
 </head>
 <body>
 
 <div class="fondo-animado"></div>
+<div class="copos-nieve" id="copos"></div>
 
 <!-- PANTALLA DE LOGIN (se ve primero) -->
 <div id="pantallaLogin">
@@ -374,6 +382,21 @@
     document.getElementById('seccionTrabajos').style.display = 'none';
     window.scrollTo({top:0, behavior:'smooth'});
   }
+
+  (function(){
+    var contenedor = document.getElementById('copos');
+    var total = 30;
+    for(var i=0;i<total;i++){
+      var copo = document.createElement('div');
+      copo.className = 'copo';
+      copo.textContent = '❄';
+      copo.style.left = Math.random()*100 + 'vw';
+      copo.style.fontSize = (Math.random()*14+8) + 'px';
+      copo.style.animationDuration = (Math.random()*10+8) + 's';
+      copo.style.animationDelay = (Math.random()*10) + 's';
+      contenedor.appendChild(copo);
+    }
+  })();
 </script>
 
 </body>
