@@ -207,22 +207,7 @@
       Iniciar sesión con Google
     </button>
 
-    <div id="loginTelefono" style="margin-top:18px;">
-      <button id="btnMostrarTelefono" style="background:transparent;color:var(--azul);border:1px solid var(--azul);padding:10px 22px;border-radius:30px;cursor:pointer;font-size:.9rem;">📱 Iniciar con número de teléfono</button>
-      <div id="formTelefono" style="display:none;margin-top:16px;max-width:300px;margin-left:auto;margin-right:auto;">
-        <input type="tel" id="inputTelefono" placeholder="+584121234567" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
-        <button class="btn-enviar" id="btnEnviarCodigo">Enviar código</button>
-        <div id="pasoCodigo" style="display:none;margin-top:12px;">
-          <input type="text" id="inputCodigo" placeholder="Código de 6 dígitos" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
-          <button class="btn-enviar" id="btnConfirmarCodigo">Confirmar código</button>
-        </div>
-        <div id="pasoNombre" style="display:none;margin-top:12px;">
-          <input type="text" id="inputNombre" placeholder="Tu nombre" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
-          <button class="btn-enviar" id="btnGuardarNombre">Guardar nombre</button>
-        </div>
-      </div>
-      <div id="recaptcha-container"></div>
-    </div>
+    <button id="btnMostrarTelefono" onclick="mostrarPantallaTelefono()" style="margin-top:18px;background:transparent;color:var(--azul);border:1px solid var(--azul);padding:10px 22px;border-radius:30px;cursor:pointer;font-size:.9rem;">📱 Iniciar con número de teléfono</button>
   </header>
 </div>
 
@@ -451,6 +436,28 @@
   <footer>© 2026 Refrigeración Barinas. Todos los derechos reservados.</footer>
 </div>
 
+
+  <div id="pantallaTelefono" style="display:none;position:fixed;inset:0;background:rgba(4,16,31,.97);z-index:500;align-items:center;justify-content:center;padding:20px;">
+    <div class="form-card" style="max-width:340px;position:relative;width:100%;">
+      <button onclick="cerrarPantallaTelefono()" style="position:absolute;top:8px;right:12px;background:none;border:none;color:var(--azul);font-size:1.6rem;cursor:pointer;line-height:1;">×</button>
+      <h3 style="color:var(--azul);text-align:center;margin-bottom:6px;">📱 Iniciar con teléfono</h3>
+      <label>Tu número</label>
+      <input type="tel" id="inputTelefono" placeholder="04129015181" maxlength="11">
+      <button class="btn-enviar" id="btnEnviarCodigo">Enviar código</button>
+      <div id="pasoCodigo" style="display:none;margin-top:14px;">
+        <label>Código de 6 dígitos</label>
+        <input type="text" id="inputCodigo" placeholder="123456">
+        <button class="btn-enviar" id="btnConfirmarCodigo">Confirmar código</button>
+      </div>
+      <div id="pasoNombre" style="display:none;margin-top:14px;">
+        <label>Tu nombre</label>
+        <input type="text" id="inputNombre" placeholder="Tu nombre">
+        <button class="btn-enviar" id="btnGuardarNombre">Guardar nombre</button>
+      </div>
+      <div id="recaptcha-container" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
 <!-- SDK de Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -558,20 +565,28 @@
 
   var confirmationResult = null;
 
-  document.getElementById('btnMostrarTelefono').addEventListener('click', function(){
-    document.getElementById('formTelefono').style.display = 'block';
-    this.style.display = 'none';
-  });
+  function mostrarPantallaTelefono(){
+    document.getElementById('pantallaTelefono').style.display = 'flex';
+  }
+  function cerrarPantallaTelefono(){
+    document.getElementById('pantallaTelefono').style.display = 'none';
+  }
 
   document.getElementById('btnEnviarCodigo').addEventListener('click', function(){
-    var tel = document.getElementById('inputTelefono').value.trim();
-    if(!tel.startsWith('+')){ tel = '+58' + tel.replace(/^0+/, ''); }
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
+    var telLocal = document.getElementById('inputTelefono').value.trim();
+    var tel = '+58' + telLocal.replace(/^0+/, '');
+    if(!window.recaptchaVerifier){
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
+    }
     auth.signInWithPhoneNumber(tel, window.recaptchaVerifier).then(function(result){
       confirmationResult = result;
       document.getElementById('pasoCodigo').style.display = 'block';
     }).catch(function(error){
       alert('No se pudo enviar el código: ' + error.message);
+      if(window.recaptchaVerifier){
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+      }
     });
   });
 
@@ -581,6 +596,8 @@
       var user = result.user;
       if(!user.displayName){
         document.getElementById('pasoNombre').style.display = 'block';
+      } else {
+        cerrarPantallaTelefono();
       }
     }).catch(function(error){
       alert('Código incorrecto: ' + error.message);
