@@ -196,6 +196,12 @@
   <header>
     <h1>❄️ Refrigeración Barinas</h1>
     <p>¡Bienvenido! Aquí encontrarás las mejores opciones y soluciones para resolver cualquier tema relacionado con tu equipo de refrigeración.</p>
+    <div id="avisoNavegador" style="display:none;background:rgba(255,80,80,.15);border:1px solid #ff6b6b;color:#ffdcdc;padding:16px 20px;border-radius:12px;max-width:480px;margin:20px auto;font-size:.9rem;line-height:1.5;text-align:center;">
+      ⚠️ Detectamos que abriste esta página desde Instagram o Facebook. Google no permite iniciar sesión ahí por seguridad.
+      <br><br>
+      <button onclick="abrirEnChrome()" style="background:#00e5ff;color:#04101c;border:none;padding:10px 20px;border-radius:20px;font-weight:700;cursor:pointer;">Abrir en Chrome</button>
+      <p style="margin-top:10px;font-size:.78rem;opacity:.85;">O toca los 3 puntos (⋮) arriba a la derecha y elige "Abrir en el navegador".</p>
+    </div>
     <button class="btn-google" id="btnGoogle">
       <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.4C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.5 5.4C41.5 36 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
       Iniciar sesión con Google
@@ -520,6 +526,18 @@
       contenedor.appendChild(copo);
     }
   })();
+
+  function detectarWebViewEmbebido(){
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    return /Instagram|FBAN|FBAV|Line\/|MicroMessenger|Twitter/i.test(ua);
+  }
+  function abrirEnChrome(){
+    var url = window.location.href.replace(/^https?:\/\//,'');
+    window.location.href = 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;end';
+  }
+  if(detectarWebViewEmbebido()){
+    document.getElementById('avisoNavegador').style.display = 'block';
+  }
 </script>
 
 </body>
