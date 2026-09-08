@@ -206,6 +206,23 @@
       <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.4C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.5 5.4C41.5 36 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
       Iniciar sesión con Google
     </button>
+
+    <div id="loginTelefono" style="margin-top:18px;">
+      <button id="btnMostrarTelefono" style="background:transparent;color:var(--azul);border:1px solid var(--azul);padding:10px 22px;border-radius:30px;cursor:pointer;font-size:.9rem;">📱 Iniciar con número de teléfono</button>
+      <div id="formTelefono" style="display:none;margin-top:16px;max-width:300px;margin-left:auto;margin-right:auto;">
+        <input type="tel" id="inputTelefono" placeholder="+584121234567" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
+        <button class="btn-enviar" id="btnEnviarCodigo">Enviar código</button>
+        <div id="pasoCodigo" style="display:none;margin-top:12px;">
+          <input type="text" id="inputCodigo" placeholder="Código de 6 dígitos" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
+          <button class="btn-enviar" id="btnConfirmarCodigo">Confirmar código</button>
+        </div>
+        <div id="pasoNombre" style="display:none;margin-top:12px;">
+          <input type="text" id="inputNombre" placeholder="Tu nombre" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,229,255,.3);background:#081222;color:#fff;margin-bottom:10px;">
+          <button class="btn-enviar" id="btnGuardarNombre">Guardar nombre</button>
+        </div>
+      </div>
+      <div id="recaptcha-container"></div>
+    </div>
   </header>
 </div>
 
@@ -538,6 +555,45 @@
   if(detectarWebViewEmbebido()){
     document.getElementById('avisoNavegador').style.display = 'block';
   }
+
+  var confirmationResult = null;
+
+  document.getElementById('btnMostrarTelefono').addEventListener('click', function(){
+    document.getElementById('formTelefono').style.display = 'block';
+    this.style.display = 'none';
+  });
+
+  document.getElementById('btnEnviarCodigo').addEventListener('click', function(){
+    var tel = document.getElementById('inputTelefono').value.trim();
+    if(!tel.startsWith('+')){ tel = '+58' + tel.replace(/^0+/, ''); }
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
+    auth.signInWithPhoneNumber(tel, window.recaptchaVerifier).then(function(result){
+      confirmationResult = result;
+      document.getElementById('pasoCodigo').style.display = 'block';
+    }).catch(function(error){
+      alert('No se pudo enviar el código: ' + error.message);
+    });
+  });
+
+  document.getElementById('btnConfirmarCodigo').addEventListener('click', function(){
+    var codigo = document.getElementById('inputCodigo').value.trim();
+    confirmationResult.confirm(codigo).then(function(result){
+      var user = result.user;
+      if(!user.displayName){
+        document.getElementById('pasoNombre').style.display = 'block';
+      }
+    }).catch(function(error){
+      alert('Código incorrecto: ' + error.message);
+    });
+  });
+
+  document.getElementById('btnGuardarNombre').addEventListener('click', function(){
+    var nombre = document.getElementById('inputNombre').value.trim();
+    if(!nombre) return;
+    auth.currentUser.updateProfile({displayName: nombre}).then(function(){
+      location.reload();
+    });
+  });
 </script>
 
 </body>
