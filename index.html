@@ -670,6 +670,833 @@ footer{
     transition:none!important;
   }
 }
+
+/* ==========================================================
+   REFRIGERACION BARINAS — MEGA INTERFAZ V2
+   ========================================================== */
+
+:root{
+  --rb-cyan:#20d9ff;
+  --rb-blue:#0788ff;
+  --rb-deep:#031526;
+  --rb-text:#f3fbff;
+  --rb-muted:#b7d4e6;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:#020d19;
+  color:var(--rb-text);
+}
+
+/* ==========================================================
+   LOGIN / PORTADA
+   ========================================================== */
+
+#pantallaLogin{
+  min-height:100svh !important;
+  width:100%;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:flex-start !important;
+  align-items:stretch !important;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(1,12,24,.80) 0%,
+      rgba(2,15,29,.48) 45%,
+      rgba(1,12,24,.70) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,8,18,.20) 0%,
+      rgba(0,12,25,.62) 100%
+    ),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=88")
+    center/cover no-repeat;
+}
+
+#pantallaLogin::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(
+      circle at 76% 44%,
+      rgba(20,190,255,.20),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 16% 80%,
+      rgba(0,130,255,.12),
+      transparent 30%
+    );
+}
+
+#pantallaLogin::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 25%,
+      rgba(112,232,255,.10) 50%,
+      transparent 75%
+    );
+  transform:translateX(-120%);
+  animation:rbLightSweep 9s linear infinite;
+}
+
+@keyframes rbLightSweep{
+  to{transform:translateX(120%)}
+}
+
+/* ==========================================================
+   NAVBAR PORTADA
+   ========================================================== */
+
+.rb-nav{
+  height:88px;
+  flex:0 0 88px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:28px;
+  padding:0 clamp(20px,7vw,120px);
+
+  background:rgba(2,16,31,.78);
+  border-bottom:1px solid rgba(73,220,255,.30);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  box-shadow:0 8px 35px rgba(0,0,0,.18);
+  z-index:10;
+}
+
+.rb-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:#fff;
+  min-width:max-content;
+}
+
+.rb-brand-icon{
+  font-size:3rem;
+  line-height:1;
+  filter:drop-shadow(0 0 12px rgba(30,210,255,.55));
+}
+
+.rb-brand-text{
+  font-size:1.45rem;
+  font-weight:800;
+  line-height:.92;
+  letter-spacing:-.03em;
+}
+
+.rb-brand-text span{
+  display:block;
+  color:var(--rb-cyan);
+}
+
+.rb-nav-links{
+  display:flex;
+  align-items:center;
+  gap:34px;
+}
+
+.rb-nav-links a{
+  color:#f0f8ff;
+  text-decoration:none;
+  font-size:.94rem;
+  font-weight:600;
+  position:relative;
+  padding:31px 0;
+}
+
+.rb-nav-links a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:20px;
+  height:2px;
+  background:var(--rb-cyan);
+  box-shadow:0 0 12px var(--rb-cyan);
+  transform:scaleX(0);
+  transition:.25s;
+}
+
+.rb-nav-links a:hover::after,
+.rb-nav-links a.active::after{
+  transform:scaleX(1);
+}
+
+.rb-nav-login{
+  border:1px solid rgba(45,220,255,.78);
+  border-radius:28px;
+  padding:12px 20px;
+  color:#fff;
+  background:rgba(4,40,68,.42);
+  box-shadow:0 0 24px rgba(20,196,255,.16);
+  cursor:pointer;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+/* ==========================================================
+   HERO
+   ========================================================== */
+
+.rb-hero{
+  flex:1;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(340px,.75fr);
+  align-items:center;
+  gap:clamp(30px,6vw,100px);
+  padding:70px clamp(20px,9vw,145px) 110px;
+  position:relative;
+  z-index:2;
+}
+
+.rb-copy{
+  position:relative;
+  z-index:3;
+}
+
+.rb-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 20px;
+
+  border:1px solid rgba(53,211,255,.45);
+  border-radius:999px;
+  background:rgba(4,42,72,.42);
+
+  backdrop-filter:blur(10px);
+
+  font-size:.82rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  color:#e9fbff;
+
+  box-shadow:0 0 25px rgba(0,193,255,.12);
+}
+
+.rb-kicker span{
+  font-size:1.2rem;
+}
+
+.rb-title{
+  font-size:clamp(3.5rem,7vw,6.6rem);
+  line-height:.88;
+  letter-spacing:-.065em;
+  margin:22px 0;
+  font-weight:900;
+  color:#fff;
+  text-shadow:0 10px 45px rgba(0,0,0,.35);
+}
+
+.rb-title span{
+  display:block;
+  color:#26dfff;
+  text-shadow:0 0 30px rgba(32,217,255,.28);
+}
+
+.rb-subtitle{
+  max-width:650px;
+  color:#e0f4ff;
+  font-size:clamp(1.05rem,1.8vw,1.35rem);
+  line-height:1.55;
+}
+
+.rb-feature-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:46px;
+  max-width:780px;
+}
+
+.rb-feature{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 10px;
+  border-right:1px solid rgba(119,223,255,.22);
+}
+
+.rb-feature:last-child{
+  border-right:0;
+}
+
+.rb-feature-icon{
+  width:44px;
+  height:44px;
+  flex:0 0 44px;
+
+  border:1px solid rgba(40,215,255,.45);
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  color:var(--rb-cyan);
+  font-size:1.2rem;
+
+  box-shadow:
+    inset 0 0 16px rgba(20,190,255,.08),
+    0 0 15px rgba(20,190,255,.08);
+}
+
+.rb-feature b{
+  display:block;
+  font-size:.72rem;
+  line-height:1.25;
+}
+
+.rb-feature small{
+  display:block;
+  color:#b8d7e8;
+  font-size:.62rem;
+  margin-top:2px;
+}
+
+/* ==========================================================
+   PANEL DE BIENVENIDA / LOGIN
+   ========================================================== */
+
+.rb-login-card{
+  width:min(100%,500px);
+  justify-self:end;
+
+  padding:34px 36px;
+
+  border-radius:30px;
+  border:1px solid rgba(73,218,255,.48);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(19,61,96,.78),
+      rgba(3,25,48,.76)
+    );
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.38),
+    0 0 55px rgba(20,190,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.12);
+
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+
+.rb-login-card h2{
+  font-size:1.75rem;
+  margin:0 0 8px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.rb-login-card p{
+  color:#d2e9f5;
+  line-height:1.5;
+  margin-bottom:24px;
+}
+
+#btnComenzar{
+  width:100%;
+  padding:17px 22px;
+  border:0;
+  border-radius:999px;
+
+  background:linear-gradient(100deg,#fff,#e9faff);
+  color:#073050;
+
+  font-size:1rem;
+  font-weight:800;
+  cursor:pointer;
+
+  box-shadow:0 8px 30px rgba(0,205,255,.25);
+  transition:.25s;
+}
+
+#btnComenzar:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 38px rgba(0,205,255,.38);
+}
+
+.rb-login-card.auth-mode .rb-welcome{
+  display:none;
+}
+
+.rb-auth{
+  display:none;
+}
+
+.rb-login-card.auth-mode .rb-auth{
+  display:block;
+}
+
+.rb-back{
+  border:0;
+  background:transparent;
+  color:#aeeaff;
+  cursor:pointer;
+  padding:0 0 15px;
+  font-size:.85rem;
+}
+
+#btnGoogle{
+  margin-top:4px !important;
+  width:100% !important;
+  min-width:0 !important;
+  border-radius:999px !important;
+  padding:16px 22px !important;
+  box-shadow:0 10px 32px rgba(0,210,255,.22) !important;
+}
+
+.rb-lockline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:20px 0 0;
+  color:#d8edf7;
+  font-size:.82rem;
+}
+
+.rb-lockline::before{
+  content:"🔒";
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(0,130,220,.20);
+}
+
+/* ==========================================================
+   HIELO DECORATIVO
+   ========================================================== */
+
+.rb-ice-edge{
+  position:absolute;
+  right:-35px;
+  top:16%;
+  width:180px;
+  height:62%;
+
+  border-radius:50% 0 0 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(235,252,255,.82),
+      rgba(66,192,255,.18) 42%,
+      transparent 72%
+    );
+
+  filter:blur(1px);
+  opacity:.75;
+
+  clip-path:
+    polygon(
+      40% 0,
+      100% 0,
+      100% 100%,
+      25% 100%,
+      55% 83%,
+      32% 67%,
+      52% 49%,
+      25% 34%,
+      48% 17%
+    );
+
+  pointer-events:none;
+}
+
+/* ==========================================================
+   BARRA INFERIOR
+   ========================================================== */
+
+.rb-bottom-strip{
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+
+  width:min(82%,1180px);
+
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+
+  border:1px solid rgba(73,220,255,.28);
+  border-radius:24px;
+
+  background:rgba(3,28,51,.72);
+  backdrop-filter:blur(16px);
+
+  padding:12px 18px;
+  z-index:5;
+}
+
+.rb-bottom-item{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  min-height:64px;
+
+  border-right:1px solid rgba(94,221,255,.18);
+}
+
+.rb-bottom-item:last-child{
+  border-right:0;
+}
+
+.rb-bottom-item i{
+  font-style:normal;
+  font-size:1.7rem;
+  color:var(--rb-cyan);
+}
+
+.rb-bottom-item span{
+  font-size:.8rem;
+  line-height:1.25;
+}
+
+.rb-scroll{
+  position:absolute;
+  bottom:3px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.76rem;
+  color:#c8e8f6;
+  text-align:center;
+  z-index:5;
+}
+
+.rb-scroll strong{
+  display:block;
+  font-size:1.6rem;
+  color:var(--rb-cyan);
+  animation:rbBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes rbBounce{
+  50%{transform:translateY(6px)}
+}
+
+/* ==========================================================
+   INTERFAZ DESPUES DEL LOGIN
+   ========================================================== */
+
+#contenidoApp{
+  background:
+    radial-gradient(circle at 15% 5%,rgba(0,157,255,.12),transparent 30%),
+    radial-gradient(circle at 85% 25%,rgba(0,217,255,.08),transparent 28%),
+    linear-gradient(180deg,#031426,#061b2d 55%,#03111f);
+
+  min-height:100vh;
+}
+
+.rb-app-nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:14px clamp(16px,5vw,70px);
+
+  background:rgba(2,16,31,.86);
+  border-bottom:1px solid rgba(45,213,255,.22);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.rb-app-links{
+  display:flex;
+  gap:26px;
+}
+
+.rb-app-links a{
+  color:#dff5ff;
+  text-decoration:none;
+  font-size:.9rem;
+}
+
+.rb-app-links a:hover{
+  color:#24dcff;
+}
+
+#contenidoApp section{
+  max-width:1180px;
+  padding:70px 22px;
+}
+
+#contenidoApp .titulo-sec{
+  font-size:clamp(1.8rem,3vw,2.5rem);
+  text-align:left;
+  margin-bottom:28px;
+  color:#fff;
+  text-shadow:none;
+}
+
+#contenidoApp .titulo-sec::after{
+  content:"";
+  display:block;
+  width:70px;
+  height:3px;
+  margin-top:12px;
+  background:linear-gradient(90deg,var(--rb-cyan),transparent);
+}
+
+#contenidoApp .grid{
+  gap:22px;
+}
+
+#contenidoApp .card{
+  border:1px solid rgba(72,215,255,.18);
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(11,39,65,.86),
+      rgba(3,19,34,.82)
+    );
+
+  box-shadow:
+    0 16px 50px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.04);
+
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+#contenidoApp .card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(55,218,255,.55);
+  box-shadow:0 20px 55px rgba(0,185,255,.12);
+}
+
+#contenidoApp .form-card{
+  max-width:650px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(11,42,69,.88),
+      rgba(3,20,35,.88)
+    );
+
+  border:1px solid rgba(63,219,255,.28);
+
+  box-shadow:0 20px 65px rgba(0,0,0,.22);
+}
+
+#contenidoApp .barra-usuario{
+  position:relative;
+  z-index:40;
+
+  background:rgba(3,22,39,.75);
+  border-bottom:1px solid rgba(54,211,255,.12);
+}
+
+#contenidoApp footer{
+  border-top:1px solid rgba(65,208,255,.12);
+}
+
+/* ==========================================================
+   MOVIL
+   ========================================================== */
+
+@media(max-width:900px){
+
+  .rb-nav{
+    height:auto;
+    min-height:74px;
+    padding:13px 18px;
+  }
+
+  .rb-nav-links{
+    display:none;
+  }
+
+  .rb-brand-text{
+    font-size:1.15rem;
+  }
+
+  .rb-brand-icon{
+    font-size:2.4rem;
+  }
+
+  .rb-nav-login{
+    padding:10px 14px;
+    font-size:.78rem;
+  }
+
+  .rb-hero{
+    grid-template-columns:1fr;
+    gap:24px;
+    padding:46px 20px 150px;
+    align-content:center;
+  }
+
+  .rb-copy{
+    text-align:center;
+  }
+
+  .rb-kicker{
+    font-size:.68rem;
+  }
+
+  .rb-title{
+    font-size:clamp(3.2rem,16vw,5rem);
+  }
+
+  .rb-subtitle{
+    margin:auto;
+    font-size:1rem;
+  }
+
+  .rb-feature-row{
+    grid-template-columns:repeat(2,1fr);
+    margin:30px auto 0;
+    max-width:520px;
+  }
+
+  .rb-feature{
+    border-right:0;
+    border-bottom:1px solid rgba(119,223,255,.16);
+    justify-content:center;
+  }
+
+  .rb-login-card{
+    justify-self:center;
+    width:min(100%,560px);
+  }
+
+  .rb-bottom-strip{
+    width:calc(100% - 24px);
+    bottom:14px;
+    grid-template-columns:repeat(2,1fr);
+    padding:8px;
+  }
+
+  .rb-bottom-item{
+    min-height:50px;
+  }
+
+  .rb-bottom-item:nth-child(2){
+    border-right:0;
+  }
+
+  .rb-bottom-item:nth-child(3),
+  .rb-bottom-item:nth-child(4){
+    border-top:1px solid rgba(94,221,255,.15);
+  }
+
+  .rb-scroll{
+    display:none;
+  }
+
+  .rb-ice-edge{
+    right:-70px;
+    opacity:.5;
+  }
+}
+
+@media(max-width:520px){
+
+  .rb-nav-login{
+    font-size:0;
+    width:44px;
+    height:44px;
+    padding:0;
+    display:grid;
+    place-items:center;
+  }
+
+  .rb-nav-login::after{
+    content:"G";
+    font-size:1rem;
+    font-weight:900;
+    color:#fff;
+  }
+
+  .rb-hero{
+    padding:34px 14px 125px;
+  }
+
+  .rb-title{
+    font-size:3.25rem;
+  }
+
+  .rb-login-card{
+    padding:26px 20px;
+    border-radius:24px;
+  }
+
+  .rb-feature-row{
+    gap:5px;
+  }
+
+  .rb-feature{
+    padding:9px 4px;
+  }
+
+  .rb-feature-icon{
+    width:38px;
+    height:38px;
+    font-size:1rem;
+  }
+
+  .rb-feature b{
+    font-size:.65rem;
+  }
+
+  .rb-feature small{
+    font-size:.55rem;
+  }
+
+  .rb-bottom-item{
+    gap:7px;
+  }
+
+  .rb-bottom-item i{
+    font-size:1.3rem;
+  }
+
+  .rb-bottom-item span{
+    font-size:.65rem;
+  }
+
+  #contenidoApp section{
+    padding:50px 15px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -680,21 +1507,210 @@ footer{
 </div>
 <div class="copos-nieve" id="copos"></div>
 
-<!-- PANTALLA DE LOGIN (se ve primero) -->
+<!-- PANTALLA DE LOGIN -->
 <div id="pantallaLogin">
-  <header>
-    <h1>❄️ Refrigeración Barinas</h1>
-    <p>¡Bienvenido! Aquí encontrarás las mejores opciones y soluciones para resolver cualquier tema relacionado con tu equipo de refrigeración.</p>
-    <button class="btn-google" id="btnGoogle">
-      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.4C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.5 5.4C41.5 36 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
-      Iniciar sesión con Google
+
+  <nav class="rb-nav">
+
+    <a href="#" class="rb-brand">
+      <div class="rb-brand-icon">❄️</div>
+      <div class="rb-brand-text">
+        Refrigeración
+        <span>Barinas</span>
+      </div>
+    </a>
+
+    <div class="rb-nav-links">
+      <a href="#" class="active">Inicio</a>
+      <a href="#rbServicios">Servicios</a>
+      <a href="#rbTrabajos">Trabajos</a>
+      <a href="#rbPrecios">Precios</a>
+      <a href="#rbContacto">Contacto</a>
+    </div>
+
+    <button class="rb-nav-login" id="btnNavComenzar">
+      Iniciar sesión
     </button>
 
-  </header>
+  </nav>
+
+  <main class="rb-hero">
+
+    <div class="rb-copy">
+
+      <div class="rb-kicker">
+        <span>❄️</span>
+        SERVICIO TÉCNICO PROFESIONAL
+      </div>
+
+      <h1 class="rb-title">
+        Refrigeración
+        <span>Barinas</span>
+      </h1>
+
+      <p class="rb-subtitle">
+        Soluciones profesionales para refrigeración,
+        climatización y equipos del hogar.
+      </p>
+
+      <div class="rb-feature-row">
+
+        <div class="rb-feature">
+          <div class="rb-feature-icon">❄️</div>
+          <div>
+            <b>Refrigeración</b>
+            <small>Comercial y residencial</small>
+          </div>
+        </div>
+
+        <div class="rb-feature">
+          <div class="rb-feature-icon">❄️</div>
+          <div>
+            <b>Aire acondicionado</b>
+            <small>Split y central</small>
+          </div>
+        </div>
+
+        <div class="rb-feature">
+          <div class="rb-feature-icon">🔧</div>
+          <div>
+            <b>Mantenimiento</b>
+            <small>Preventivo y correctivo</small>
+          </div>
+        </div>
+
+        <div class="rb-feature">
+          <div class="rb-feature-icon">✓</div>
+          <div>
+            <b>Garantía</b>
+            <small>En cada servicio</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="rb-login-card" id="rbLoginCard">
+
+      <div class="rb-welcome">
+
+        <h2>
+          <span style="font-size:2rem;">❄️</span>
+          Bienvenido
+        </h2>
+
+        <p>
+          Accede a nuestros servicios, solicita asistencia técnica
+          y consulta trabajos realizados.
+        </p>
+
+        <button id="btnComenzar">
+          Comenzar
+          <span style="float:right;">→</span>
+        </button>
+
+        <div class="rb-lockline">
+          Acceso seguro mediante Google
+        </div>
+
+      </div>
+
+      <div class="rb-auth">
+
+        <button class="rb-back" id="btnVolverInicio">
+          ← Volver
+        </button>
+
+        <h2>
+          <span style="font-size:2rem;">🔐</span>
+          Iniciar sesión
+        </h2>
+
+        <p>
+          Inicia sesión con tu cuenta de Google para continuar
+          y acceder a todas las funciones de Refrigeración Barinas.
+        </p>
+
+        <button class="btn-google" id="btnGoogle">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.4C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.5 5.4C41.5 36 44 30.5 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+          </svg>
+
+          Continuar con Google
+
+          <span style="margin-left:auto;">→</span>
+        </button>
+
+        <div class="rb-lockline">
+          Tu acceso está protegido mediante Google
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <div class="rb-ice-edge"></div>
+
+  <div class="rb-bottom-strip">
+
+    <div class="rb-bottom-item">
+      <i>👨‍🔧</i>
+      <span>Técnicos<br>Especializados</span>
+    </div>
+
+    <div class="rb-bottom-item">
+      <i>🚚</i>
+      <span>Atención<br>Rápida</span>
+    </div>
+
+    <div class="rb-bottom-item">
+      <i>🛡️</i>
+      <span>Servicio<br>Garantizado</span>
+    </div>
+
+    <div class="rb-bottom-item">
+      <i>📍</i>
+      <span>Barinas<br>y alrededores</span>
+    </div>
+
+  </div>
+
+  <div class="rb-scroll">
+    <strong>⌄</strong>
+    Desliza para conocer más
+  </div>
+
 </div>
 
 <!-- CONTENIDO DE LA APP (se muestra solo tras iniciar sesión) -->
 <div id="contenidoApp" style="display:none;">
+
+<div class="rb-app-nav">
+
+  <a href="#" class="rb-brand">
+    <div class="rb-brand-icon">❄️</div>
+    <div class="rb-brand-text">
+      Refrigeración
+      <span>Barinas</span>
+    </div>
+  </a>
+
+  <div class="rb-app-links">
+    <a href="#rbServicios">Servicios</a>
+    <a href="#rbPrecios">Precios</a>
+    <a href="#rbTrabajos">Trabajos</a>
+    <a href="#rbContacto">Contacto</a>
+  </div>
+
+</div>
+
+
 
   <div class="barra-usuario">
     <img id="fotoUsuario" src="" alt="foto">
@@ -702,7 +1718,7 @@ footer{
     <button class="btn-salir" id="btnSalir">Cerrar sesión</button>
   </div>
 
-  <section>
+  <section id="rbServicios">
     <h2 class="titulo-sec">Nuestros servicios</h2>
     <div class="grid">
 
@@ -752,7 +1768,7 @@ footer{
 
   
 
-  <section>
+  <section id="rbContacto">
     <h2 class="titulo-sec">¿Tu equipo está fallando?</h2>
     <div class="form-card">
       <label for="equipo">Selecciona el equipo dañado</label>
@@ -780,6 +1796,7 @@ footer{
     <button class="btn-google" onclick="mostrarTrabajos()">📸 Ver trabajos realizados</button>
   </section>
 
+  <div id="rbTrabajos"></div>
   <div id="seccionTrabajos" style="display:none;">
     <div style="text-align:center;padding:20px 0;">
       <button class="btn-salir" onclick="ocultarTrabajos()">← Volver</button>
@@ -921,7 +1938,50 @@ footer{
 
 
 <!-- SDK de Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">
+  /* ==========================================================
+     LOGIN DE DOS PASOS — MISMO PANEL
+     ========================================================== */
+
+  (function(){
+
+    var card = document.getElementById('rbLoginCard');
+    var comenzar = document.getElementById('btnComenzar');
+    var volver = document.getElementById('btnVolverInicio');
+    var navComenzar = document.getElementById('btnNavComenzar');
+
+    function mostrarLogin(){
+      if(card){
+        card.classList.add('auth-mode');
+        setTimeout(function(){
+          var google = document.getElementById('btnGoogle');
+          if(google) google.focus();
+        },100);
+      }
+    }
+
+    function mostrarInicio(){
+      if(card){
+        card.classList.remove('auth-mode');
+      }
+    }
+
+    if(comenzar){
+      comenzar.addEventListener('click', mostrarLogin);
+    }
+
+    if(navComenzar){
+      navComenzar.addEventListener('click', mostrarLogin);
+    }
+
+    if(volver){
+      volver.addEventListener('click', mostrarInicio);
+    }
+
+  })();
+
+
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
 <script>
