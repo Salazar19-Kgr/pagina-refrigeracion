@@ -30,11 +30,23 @@ html{
 }
 
 body{
-  font-family:'Segoe UI',Arial,sans-serif;
   background:
+    linear-gradient(
+      90deg,
+      rgba(1,12,24,.80) 0%,
+      rgba(2,15,29,.48) 45%,
+      rgba(1,12,24,.70) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,8,18,.20) 0%,
+      rgba(0,12,25,.62) 100%
+    ),
     radial-gradient(circle at 15% 10%,rgba(38,156,255,.16),transparent 32%),
     radial-gradient(circle at 85% 75%,rgba(0,220,255,.10),transparent 30%),
-    var(--fondo);
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=88")
+    center/cover fixed no-repeat;
+  font-family:'Segoe UI',Arial,sans-serif;
   color:var(--texto);
   min-height:100vh;
   overflow-x:hidden;
