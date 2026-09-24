@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:'Segoe UI',Arial,sans-serif;
+      color:#eaf7ff;
+    }
+
+    body{
+      min-height:100vh;
+      padding:30px 18px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(1,12,24,.84),
+          rgba(2,15,29,.55),
+          rgba(1,12,24,.80)
+        ),
+        url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=88")
+        center/cover fixed no-repeat;
+    }
+
+    .panel{
+      width:min(100%,1000px);
+      margin:auto;
+    }
+
+    header{
+      padding:28px;
+      border:1px solid rgba(127,231,255,.22);
+      border-radius:25px;
+      background:rgba(3,20,36,.78);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(1.7rem,5vw,2.5rem);
+    }
+
+    .sub{
+      margin:7px 0 0;
+      color:#a9c8d8;
+    }
+
+    .salir{
+      border:0;
+      border-radius:12px;
+      padding:12px 18px;
+      cursor:pointer;
+      font-weight:700;
+      background:rgba(255,90,90,.15);
+      color:#ffd1d1;
+      border:1px solid rgba(255,120,120,.25);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+      margin-top:22px;
+    }
+
+    .card{
+      padding:25px;
+      border-radius:22px;
+      border:1px solid rgba(127,231,255,.18);
+      background:rgba(3,20,36,.72);
+      backdrop-filter:blur(15px);
+      -webkit-backdrop-filter:blur(15px);
+    }
+
+    .icon{
+      font-size:2rem;
+    }
+
+    h2{
+      margin:12px 0 8px;
+    }
+
+    p{
+      color:#a9c8d8;
+      line-height:1.5;
+    }
+
+    .estado{
+      margin-top:25px;
+      padding:18px;
+      border-radius:16px;
+      background:rgba(0,180,255,.08);
+      border:1px solid rgba(127,231,255,.15);
+      text-align:center;
+      color:#bdeeff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="panel">
+
+    <header>
+      <div>
+        <h1>⚙️ Panel de Administración</h1>
+        <p class="sub">Gestión de la página Refrigeración Barinas</p>
+      </div>
+
+      <button class="salir" id="btnSalir">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <section class="grid">
+
+      <article class="card">
+        <div class="icon">💰</div>
+        <h2>Precios</h2>
+        <p>
+          Aquí podremos agregar, modificar y eliminar precios
+          sin tener que editar el código de la página.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">❄️</div>
+        <h2>Equipos y servicios</h2>
+        <p>
+          Aquí podremos administrar los equipos y servicios
+          disponibles en la página.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="icon">📋</div>
+        <h2>Contenido</h2>
+        <p>
+          Espacio reservado para futuras opciones de
+          administración.
+        </p>
+      </article>
+
+    </section>
+
+    <div class="estado">
+      🔒 Sesión administrativa protegida.
+    </div>
+
+  </main>
+
+<script>
+document.getElementById("btnSalir").addEventListener("click", function(){
+  window.location.href = "/api/admin/logout";
+});
+</script>
+
+</body>
+</html>

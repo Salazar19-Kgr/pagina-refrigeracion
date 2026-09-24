@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:'Segoe UI',Arial,sans-serif;
+      color:#eaf7ff;
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(1,12,24,.82),
+          rgba(2,15,29,.52),
+          rgba(1,12,24,.78)
+        ),
+        url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=88")
+        center/cover fixed no-repeat;
+    }
+
+    .admin-card{
+      width:min(100%,460px);
+      padding:35px 28px;
+      border:1px solid rgba(127,231,255,.25);
+      border-radius:28px;
+      background:rgba(3,20,36,.78);
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.45),
+        inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+
+    .icon{
+      text-align:center;
+      font-size:3rem;
+      margin-bottom:10px;
+    }
+
+    h1{
+      text-align:center;
+      margin:0 0 10px;
+      font-size:2rem;
+    }
+
+    .sub{
+      text-align:center;
+      color:#a9c8d8;
+      line-height:1.5;
+      margin-bottom:28px;
+    }
+
+    label{
+      display:block;
+      margin:15px 0 7px;
+      color:#ccefff;
+      font-weight:600;
+    }
+
+    input{
+      width:100%;
+      padding:14px 15px;
+      border-radius:13px;
+      border:1px solid rgba(127,231,255,.22);
+      outline:none;
+      background:rgba(0,10,20,.65);
+      color:white;
+      font-size:1rem;
+    }
+
+    input:focus{
+      border-color:#70dfff;
+    }
+
+    button{
+      width:100%;
+      margin-top:24px;
+      padding:14px;
+      border:0;
+      border-radius:13px;
+      cursor:pointer;
+      font-size:1rem;
+      font-weight:700;
+      color:#02111d;
+      background:linear-gradient(90deg,#dffaff,#70dfff,#349cff);
+    }
+
+    .volver{
+      display:block;
+      margin-top:18px;
+      text-align:center;
+      color:#9edfff;
+      text-decoration:none;
+    }
+
+    #mensaje{
+      min-height:22px;
+      margin-top:15px;
+      text-align:center;
+      color:#ff9b9b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="admin-card">
+
+    <div class="icon">🔐</div>
+
+    <h1>Administración</h1>
+
+    <p class="sub">
+      Acceso exclusivo para administrar el contenido de la página.
+    </p>
+
+    <form id="adminLogin">
+
+      <label for="usuario">Usuario</label>
+      <input
+        id="usuario"
+        name="usuario"
+        type="text"
+        autocomplete="username"
+        required
+      >
+
+      <label for="contraseña">Contraseña</label>
+      <input
+        id="contraseña"
+        name="contraseña"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit">
+        Entrar
+      </button>
+
+      <div id="mensaje"></div>
+
+    </form>
+
+    <a class="volver" href="/">
+      ← Volver al inicio
+    </a>
+
+  </main>
+
+<script>
+document.getElementById("adminLogin").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const mensaje = document.getElementById("mensaje");
+  const boton = this.querySelector("button");
+
+  const usuario = document.getElementById("usuario").value;
+  const contraseña = document.getElementById("contraseña").value;
+
+  mensaje.textContent = "";
+  boton.disabled = true;
+  boton.textContent = "Verificando...";
+
+  try {
+    const respuesta = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({
+        usuario: usuario,
+        contraseña: contraseña
+      })
+    });
+
+    const datos = await respuesta.json();
+
+    if (respuesta.ok && datos.ok) {
+      window.location.href = "/admin-panel.html";
+      return;
+    }
+
+    mensaje.textContent = datos.mensaje || "No se pudo iniciar sesión.";
+  } catch (error) {
+    mensaje.textContent = "No se pudo conectar con el servidor.";
+  }
+
+  boton.disabled = false;
+  boton.textContent = "Entrar";
+});
+</script>
+
+</body>
+</html>

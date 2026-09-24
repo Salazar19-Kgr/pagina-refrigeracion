@@ -133,11 +133,11 @@ export default {
       });
     }
 
-    // PROTECCIÓN DEL APARTADO ADMINISTRATIVO
-    if (
-      url.pathname === "/admin" ||
-      url.pathname === "/admin.html"
-    ) {
+    // /admin.html muestra el formulario de acceso.
+    // Las operaciones administrativas estarán protegidas por sesión.
+
+    // PROTECCIÓN DEL PANEL ADMINISTRATIVO
+    if (url.pathname === "/admin-panel.html") {
       const cookie = obtenerCookie(request, COOKIE_NAME);
 
       if (!await sesionValida(cookie, env.ADMIN_SESSION_SECRET)) {
