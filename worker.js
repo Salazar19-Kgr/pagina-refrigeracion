@@ -121,6 +121,29 @@ export default {
       }
     }
 
+    // LEER PRECIOS DESDE D1
+    if (url.pathname === "/api/admin/precios" && request.method === "GET") {
+      try {
+        const { results } = await env.DB
+          .prepare(`
+            SELECT id, nombre, descripcion, precio, precio_texto, activo, orden
+            FROM precios
+            ORDER BY orden ASC, id ASC
+          `)
+          .all();
+
+        return respuestaJson({
+          ok: true,
+          precios: results
+        });
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al consultar precios" },
+          500
+        );
+      }
+    }
+
     // CERRAR SESIÓN DE ADMINISTRACIÓN
     if (url.pathname === "/api/admin/logout") {
       return new Response(null, {

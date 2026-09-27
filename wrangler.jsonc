@@ -6,5 +6,11 @@
   "assets": {
     "directory": "./",
     "binding": "ASSETS"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "13e37767-df5e-4a5a-8407-0fb359d68bfd"
+    }
+  ]
 }
