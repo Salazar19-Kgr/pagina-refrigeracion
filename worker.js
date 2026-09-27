@@ -144,6 +144,29 @@ export default {
       }
     }
 
+    // LEER SERVICIOS DESDE D1
+    if (url.pathname === "/api/admin/servicios" && request.method === "GET") {
+      try {
+        const { results } = await env.DB
+          .prepare(`
+            SELECT id, nombre, descripcion, categoria, activo, orden
+            FROM servicios
+            ORDER BY orden ASC, id ASC
+          `)
+          .all();
+
+        return respuestaJson({
+          ok: true,
+          servicios: results
+        });
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al consultar servicios" },
+          500
+        );
+      }
+    }
+
     // CERRAR SESIÓN DE ADMINISTRACIÓN
     if (url.pathname === "/api/admin/logout") {
       return new Response(null, {

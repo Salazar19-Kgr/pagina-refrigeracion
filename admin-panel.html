@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración</title>
+  <title>Administración · Refrigeración Barinas</title>
 
   <style>
-    *{
-      box-sizing:border-box;
-    }
+    *{box-sizing:border-box}
 
     html,body{
       margin:0;
@@ -19,25 +17,25 @@
 
     body{
       min-height:100vh;
-      padding:30px 18px;
+      padding:22px 15px;
       background:
         linear-gradient(
-          90deg,
-          rgba(1,12,24,.84),
-          rgba(2,15,29,.55),
-          rgba(1,12,24,.80)
+          135deg,
+          rgba(2,14,28,.94),
+          rgba(4,34,57,.82),
+          rgba(1,12,24,.95)
         ),
         url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=88")
         center/cover fixed no-repeat;
     }
 
     .panel{
-      width:min(100%,1000px);
+      width:min(100%,1100px);
       margin:auto;
     }
 
     header{
-      padding:28px;
+      padding:25px;
       border:1px solid rgba(127,231,255,.22);
       border-radius:25px;
       background:rgba(3,20,36,.78);
@@ -74,7 +72,7 @@
 
     .grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       gap:20px;
       margin-top:22px;
     }
@@ -86,10 +84,11 @@
       background:rgba(3,20,36,.72);
       backdrop-filter:blur(15px);
       -webkit-backdrop-filter:blur(15px);
+      box-shadow:0 15px 40px rgba(0,0,0,.22);
     }
 
     .icon{
-      font-size:2rem;
+      font-size:2.2rem;
     }
 
     h2{
@@ -101,71 +100,317 @@
       line-height:1.5;
     }
 
+    .btn{
+      width:100%;
+      margin-top:12px;
+      padding:13px 16px;
+      border:1px solid rgba(127,231,255,.25);
+      border-radius:12px;
+      background:rgba(58,168,255,.12);
+      color:#eaf7ff;
+      cursor:pointer;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    .btn:hover{
+      background:rgba(58,168,255,.22);
+    }
+
+    .seccion{
+      display:none;
+      margin-top:22px;
+    }
+
+    .seccion.activa{
+      display:block;
+    }
+
+    .seccion-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      flex-wrap:wrap;
+      margin-bottom:15px;
+    }
+
+    .seccion-header h2{
+      margin:0;
+    }
+
+    .volver{
+      width:auto;
+      margin:0;
+      padding:10px 15px;
+    }
+
+    .lista{
+      display:grid;
+      gap:12px;
+    }
+
+    .item{
+      padding:17px;
+      border-radius:16px;
+      border:1px solid rgba(127,231,255,.14);
+      background:rgba(3,20,36,.65);
+    }
+
+    .item strong{
+      display:block;
+      font-size:1.05rem;
+      margin-bottom:6px;
+    }
+
+    .item small{
+      color:#9eb9c9;
+    }
+
+    .precio{
+      display:inline-block;
+      margin-top:10px;
+      font-weight:800;
+      color:#7fd8ff;
+      font-size:1.05rem;
+    }
+
     .estado{
-      margin-top:25px;
-      padding:18px;
+      margin-top:22px;
+      padding:16px;
       border-radius:16px;
       background:rgba(0,180,255,.08);
       border:1px solid rgba(127,231,255,.15);
       text-align:center;
       color:#bdeeff;
     }
+
+    .nota{
+      padding:20px;
+      border-radius:18px;
+      border:1px solid rgba(127,231,255,.14);
+      background:rgba(3,20,36,.65);
+      color:#a9c8d8;
+      line-height:1.6;
+    }
   </style>
 </head>
 
 <body>
 
-  <main class="panel">
+<main class="panel">
 
-    <header>
-      <div>
-        <h1>⚙️ Panel de Administración</h1>
-        <p class="sub">Gestión de la página Refrigeración Barinas</p>
-      </div>
-
-      <button class="salir" id="btnSalir">
-        Cerrar sesión
-      </button>
-    </header>
-
-    <section class="grid">
-
-      <article class="card">
-        <div class="icon">💰</div>
-        <h2>Precios</h2>
-        <p>
-          Aquí podremos agregar, modificar y eliminar precios
-          sin tener que editar el código de la página.
-        </p>
-      </article>
-
-      <article class="card">
-        <div class="icon">❄️</div>
-        <h2>Equipos y servicios</h2>
-        <p>
-          Aquí podremos administrar los equipos y servicios
-          disponibles en la página.
-        </p>
-      </article>
-
-      <article class="card">
-        <div class="icon">📋</div>
-        <h2>Contenido</h2>
-        <p>
-          Espacio reservado para futuras opciones de
-          administración.
-        </p>
-      </article>
-
-    </section>
-
-    <div class="estado">
-      🔒 Sesión administrativa protegida.
+  <header>
+    <div>
+      <h1>⚙️ Panel de Administración</h1>
+      <p class="sub">Gestión de la página Refrigeración Barinas</p>
     </div>
 
-  </main>
+    <button class="salir" id="btnSalir">
+      Cerrar sesión
+    </button>
+  </header>
+
+  <section id="menuPrincipal" class="grid">
+
+    <article class="card">
+      <div class="icon">💰</div>
+      <h2>Precios</h2>
+      <p>Consulta los precios almacenados actualmente en la base de datos.</p>
+      <button class="btn" onclick="mostrarSeccion('precios')">
+        Administrar precios
+      </button>
+    </article>
+
+    <article class="card">
+      <div class="icon">❄️</div>
+      <h2>Equipos y servicios</h2>
+      <p>Consulta los servicios disponibles actualmente en Refrigeración Barinas.</p>
+      <button class="btn" onclick="mostrarSeccion('servicios')">
+        Administrar servicios
+      </button>
+    </article>
+
+    <article class="card">
+      <div class="icon">📋</div>
+      <h2>Contenido</h2>
+      <p>Área preparada para administrar textos y contenido de la página.</p>
+      <button class="btn" onclick="mostrarSeccion('contenido')">
+        Administrar contenido
+      </button>
+    </article>
+
+  </section>
+
+  <section id="precios" class="seccion">
+    <div class="seccion-header">
+      <h2>💰 Precios</h2>
+      <button class="btn volver" onclick="volverMenu()">← Volver</button>
+    </div>
+
+    <div id="listaPrecios" class="lista">
+      <div class="nota">Cargando precios...</div>
+    </div>
+  </section>
+
+  <section id="servicios" class="seccion">
+    <div class="seccion-header">
+      <h2>❄️ Equipos y servicios</h2>
+      <button class="btn volver" onclick="volverMenu()">← Volver</button>
+    </div>
+
+    <div id="listaServicios" class="lista">
+      <div class="nota">
+        Esta sección ya está preparada para conectarse con D1.
+      </div>
+    </div>
+  </section>
+
+  <section id="contenido" class="seccion">
+    <div class="seccion-header">
+      <h2>📋 Contenido</h2>
+      <button class="btn volver" onclick="volverMenu()">← Volver</button>
+    </div>
+
+    <div class="nota">
+      Esta sección queda preparada para la siguiente etapa de administración
+      del contenido de la página.
+    </div>
+  </section>
+
+  <div class="estado">
+    🔒 Sesión administrativa protegida.
+  </div>
+
+</main>
 
 <script>
+function mostrarSeccion(nombre){
+  document.getElementById("menuPrincipal").style.display = "none";
+
+  document.querySelectorAll(".seccion").forEach(function(seccion){
+    seccion.classList.remove("activa");
+  });
+
+  document.getElementById(nombre).classList.add("activa");
+
+  if(nombre === "precios"){
+    cargarPrecios();
+  }
+
+  if(nombre === "servicios"){
+    cargarServicios();
+  }
+}
+
+function volverMenu(){
+  document.querySelectorAll(".seccion").forEach(function(seccion){
+    seccion.classList.remove("activa");
+  });
+
+  document.getElementById("menuPrincipal").style.display = "grid";
+}
+
+async function cargarPrecios(){
+  const lista = document.getElementById("listaPrecios");
+
+  lista.innerHTML = '<div class="nota">Cargando precios...</div>';
+
+  try{
+    const respuesta = await fetch("/api/admin/precios", {
+      credentials: "same-origin"
+    });
+
+    const datos = await respuesta.json();
+
+    if(!respuesta.ok || !datos.ok){
+      throw new Error(datos.mensaje || "No se pudieron cargar los precios");
+    }
+
+    if(!datos.precios || datos.precios.length === 0){
+      lista.innerHTML = '<div class="nota">No hay precios registrados.</div>';
+      return;
+    }
+
+    lista.innerHTML = "";
+
+    datos.precios.forEach(function(item){
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "item";
+
+      const precio = item.precio_texto ||
+        (Number(item.precio) > 0 ? "$" + Number(item.precio).toFixed(0) : "Consultar");
+
+      tarjeta.innerHTML = `
+        <strong>${escapeHtml(item.nombre)}</strong>
+        <small>${escapeHtml(item.descripcion || "")}</small>
+        <span class="precio">${escapeHtml(precio)}</span>
+      `;
+
+      lista.appendChild(tarjeta);
+    });
+
+  }catch(error){
+    lista.innerHTML =
+      '<div class="nota">❌ No se pudieron cargar los precios. ' +
+      escapeHtml(error.message) +
+      '</div>';
+  }
+}
+
+async function cargarServicios(){
+  const lista = document.getElementById("listaServicios");
+
+  lista.innerHTML = '<div class="nota">Cargando servicios...</div>';
+
+  try{
+    const respuesta = await fetch("/api/admin/servicios", {
+      credentials: "same-origin"
+    });
+
+    const datos = await respuesta.json();
+
+    if(!respuesta.ok || !datos.ok){
+      throw new Error(datos.mensaje || "No se pudieron cargar los servicios");
+    }
+
+    if(!datos.servicios || datos.servicios.length === 0){
+      lista.innerHTML = '<div class="nota">No hay servicios registrados.</div>';
+      return;
+    }
+
+    lista.innerHTML = "";
+
+    datos.servicios.forEach(function(item){
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "item";
+
+      tarjeta.innerHTML = `
+        <strong>${escapeHtml(item.nombre)}</strong>
+        <small>${escapeHtml(item.descripcion || "")}</small>
+        <span class="precio">${escapeHtml(item.categoria || "Servicio")}</span>
+      `;
+
+      lista.appendChild(tarjeta);
+    });
+
+  }catch(error){
+    lista.innerHTML =
+      '<div class="nota">❌ No se pudieron cargar los servicios. ' +
+      escapeHtml(error.message) +
+      '</div>';
+  }
+}
+
+function escapeHtml(valor){
+  return String(valor)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 document.getElementById("btnSalir").addEventListener("click", function(){
   window.location.href = "/api/admin/logout";
 });
