@@ -121,6 +121,144 @@ export default {
       }
     }
 
+    // CREAR PRECIO
+    if (url.pathname === "/api/admin/precios" && request.method === "POST") {
+      try {
+        const datos = await request.json();
+
+        const nombre = String(datos.nombre || "").trim();
+        const descripcion = String(datos.descripcion || "").trim();
+        const precioTexto = String(datos.precio_texto || "").trim();
+        const precio = Number(datos.precio || 0);
+        const activo = datos.activo === false ? 0 : 1;
+        const orden = Number(datos.orden || 0);
+
+        if (!nombre) {
+          return respuestaJson(
+            { ok: false, mensaje: "El nombre es obligatorio" },
+            400
+          );
+        }
+
+        await env.DB.prepare(`
+          INSERT INTO precios
+          (nombre, descripcion, precio, precio_texto, activo, orden)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `)
+          .bind(
+            nombre,
+            descripcion,
+            precio,
+            precioTexto || null,
+            activo,
+            orden
+          )
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: "Precio creado correctamente"
+        }, 201);
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al crear precio" },
+          500
+        );
+      }
+    }
+
+    // EDITAR PRECIO
+    if (url.pathname === "/api/admin/precios" && request.method === "PUT") {
+      try {
+        const datos = await request.json();
+
+        const id = Number(datos.id);
+        const nombre = String(datos.nombre || "").trim();
+        const descripcion = String(datos.descripcion || "").trim();
+        const precioTexto = String(datos.precio_texto || "").trim();
+        const precio = Number(datos.precio || 0);
+        const activo = datos.activo === false ? 0 : 1;
+        const orden = Number(datos.orden || 0);
+
+        if (!id || !nombre) {
+          return respuestaJson(
+            { ok: false, mensaje: "ID y nombre son obligatorios" },
+            400
+          );
+        }
+
+        const resultado = await env.DB.prepare(`
+          UPDATE precios
+          SET nombre = ?,
+              descripcion = ?,
+              precio = ?,
+              precio_texto = ?,
+              activo = ?,
+              orden = ?,
+              actualizado_en = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `)
+          .bind(
+            nombre,
+            descripcion,
+            precio,
+            precioTexto || null,
+            activo,
+            orden,
+            id
+          )
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: resultado.meta.changes
+            ? "Precio actualizado correctamente"
+            : "No se encontró el precio"
+        });
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al actualizar precio" },
+          500
+        );
+      }
+    }
+
+    // ELIMINAR PRECIO
+    if (url.pathname === "/api/admin/precios" && request.method === "DELETE") {
+      try {
+        const datos = await request.json();
+        const id = Number(datos.id);
+
+        if (!id) {
+          return respuestaJson(
+            { ok: false, mensaje: "ID inválido" },
+            400
+          );
+        }
+
+        const resultado = await env.DB.prepare(`
+          DELETE FROM precios WHERE id = ?
+        `)
+          .bind(id)
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: resultado.meta.changes
+            ? "Precio eliminado correctamente"
+            : "No se encontró el precio"
+        });
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al eliminar precio" },
+          500
+        );
+      }
+    }
+
     // LEER PRECIOS DESDE D1
     if (url.pathname === "/api/admin/precios" && request.method === "GET") {
       try {

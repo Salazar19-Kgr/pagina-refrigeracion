@@ -248,6 +248,43 @@
       <button class="btn volver" onclick="volverMenu()">← Volver</button>
     </div>
 
+    <div class="acciones-admin">
+      <button class="btn" onclick="mostrarFormularioPrecio()">
+        ➕ Agregar precio
+      </button>
+    </div>
+
+    <div id="formularioPrecio" class="form-admin" style="display:none;">
+      <h3 id="tituloFormularioPrecio">Agregar precio</h3>
+
+      <input type="hidden" id="precioId">
+
+      <label>Nombre</label>
+      <input id="precioNombre" type="text" placeholder="Ej. Instalación de split nuevo">
+
+      <label>Descripción</label>
+      <input id="precioDescripcion" type="text" placeholder="Descripción del servicio">
+
+      <label>Precio numérico</label>
+      <input id="precioValor" type="number" min="0" step="0.01" placeholder="Ej. 50">
+
+      <label>Precio mostrado</label>
+      <input id="precioTexto" type="text" placeholder="Ej. $40 – $60">
+
+      <label>Orden</label>
+      <input id="precioOrden" type="number" min="0" value="0">
+
+      <label class="check-admin">
+        <input id="precioActivo" type="checkbox" checked>
+        Activo
+      </label>
+
+      <div class="acciones-admin">
+        <button class="btn" onclick="guardarPrecio()">💾 Guardar</button>
+        <button class="btn secundario" onclick="cerrarFormularioPrecio()">Cancelar</button>
+      </div>
+    </div>
+
     <div id="listaPrecios" class="lista">
       <div class="nota">Cargando precios...</div>
     </div>
@@ -311,6 +348,105 @@ function volverMenu(){
   document.getElementById("menuPrincipal").style.display = "grid";
 }
 
+function mostrarFormularioPrecio(item = null){
+  document.getElementById("formularioPrecio").style.display = "block";
+
+  document.getElementById("tituloFormularioPrecio").textContent =
+    item ? "Editar precio" : "Agregar precio";
+
+  document.getElementById("precioId").value = item ? item.id : "";
+  document.getElementById("precioNombre").value = item ? item.nombre : "";
+  document.getElementById("precioDescripcion").value = item ? (item.descripcion || "") : "";
+  document.getElementById("precioValor").value = item ? (item.precio || 0) : "";
+  document.getElementById("precioTexto").value = item ? (item.precio_texto || "") : "";
+  document.getElementById("precioOrden").value = item ? (item.orden || 0) : 0;
+  document.getElementById("precioActivo").checked =
+    item ? Number(item.activo) === 1 : true;
+}
+
+function cerrarFormularioPrecio(){
+  document.getElementById("formularioPrecio").style.display = "none";
+}
+
+async function guardarPrecio(){
+  const id = Number(document.getElementById("precioId").value);
+  const nombre = document.getElementById("precioNombre").value.trim();
+  const descripcion = document.getElementById("precioDescripcion").value.trim();
+  const precio = Number(document.getElementById("precioValor").value || 0);
+  const precioTexto = document.getElementById("precioTexto").value.trim();
+  const orden = Number(document.getElementById("precioOrden").value || 0);
+  const activo = document.getElementById("precioActivo").checked;
+
+  if(!nombre){
+    alert("El nombre del precio es obligatorio.");
+    return;
+  }
+
+  const datos = {
+    nombre,
+    descripcion,
+    precio,
+    precio_texto: precioTexto,
+    orden,
+    activo
+  };
+
+  if(id){
+    datos.id = id;
+  }
+
+  try{
+    const respuesta = await fetch("/api/admin/precios", {
+      method: id ? "PUT" : "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(resultado.mensaje || "No se pudo guardar el precio");
+    }
+
+    cerrarFormularioPrecio();
+    await cargarPrecios();
+
+  }catch(error){
+    alert("❌ " + error.message);
+  }
+}
+
+async function eliminarPrecio(id, nombre){
+  if(!confirm("¿Eliminar el precio '" + nombre + "'?")){
+    return;
+  }
+
+  try{
+    const respuesta = await fetch("/api/admin/precios", {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(resultado.mensaje || "No se pudo eliminar el precio");
+    }
+
+    await cargarPrecios();
+
+  }catch(error){
+    alert("❌ " + error.message);
+  }
+}
+
 async function cargarPrecios(){
   const lista = document.getElementById("listaPrecios");
 
@@ -345,6 +481,16 @@ async function cargarPrecios(){
         <strong>${escapeHtml(item.nombre)}</strong>
         <small>${escapeHtml(item.descripcion || "")}</small>
         <span class="precio">${escapeHtml(precio)}</span>
+
+        <div class="acciones-item">
+          <button class="btn" onclick='mostrarFormularioPrecio(${JSON.stringify(item)})'>
+            ✏️ Editar
+          </button>
+
+          <button class="btn peligro" onclick='eliminarPrecio(${Number(item.id)}, ${JSON.stringify(item.nombre)})'>
+            🗑️ Eliminar
+          </button>
+        </div>
       `;
 
       lista.appendChild(tarjeta);
