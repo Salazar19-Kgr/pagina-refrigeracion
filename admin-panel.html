@@ -296,10 +296,42 @@
       <button class="btn volver" onclick="volverMenu()">← Volver</button>
     </div>
 
-    <div id="listaServicios" class="lista">
-      <div class="nota">
-        Esta sección ya está preparada para conectarse con D1.
+    <div class="acciones-admin">
+      <button class="btn" onclick="mostrarFormularioServicio()">
+        ➕ Agregar servicio
+      </button>
+    </div>
+
+    <div id="formularioServicio" class="form-admin" style="display:none;">
+      <h3 id="tituloFormularioServicio">Agregar servicio</h3>
+
+      <input type="hidden" id="servicioId">
+
+      <label>Nombre</label>
+      <input id="servicioNombre" type="text" placeholder="Ej. 🌀 Aire acondicionado Split">
+
+      <label>Descripción</label>
+      <input id="servicioDescripcion" type="text" placeholder="Descripción del servicio">
+
+      <label>Categoría</label>
+      <input id="servicioCategoria" type="text" placeholder="Ej. Aire acondicionado">
+
+      <label>Orden</label>
+      <input id="servicioOrden" type="number" min="0" value="0">
+
+      <label class="check-admin">
+        <input id="servicioActivo" type="checkbox" checked>
+        Activo
+      </label>
+
+      <div class="acciones-admin">
+        <button class="btn" onclick="guardarServicio()">💾 Guardar</button>
+        <button class="btn secundario" onclick="cerrarFormularioServicio()">Cancelar</button>
       </div>
+    </div>
+
+    <div id="listaServicios" class="lista">
+      <div class="nota">Cargando servicios...</div>
     </div>
   </section>
 
@@ -504,6 +536,113 @@ async function cargarPrecios(){
   }
 }
 
+function mostrarFormularioServicio(item = null){
+  document.getElementById("formularioServicio").style.display = "block";
+
+  document.getElementById("tituloFormularioServicio").textContent =
+    item ? "Editar servicio" : "Agregar servicio";
+
+  document.getElementById("servicioId").value = item ? item.id : "";
+  document.getElementById("servicioNombre").value = item ? item.nombre : "";
+  document.getElementById("servicioDescripcion").value =
+    item ? (item.descripcion || "") : "";
+  document.getElementById("servicioCategoria").value =
+    item ? (item.categoria || "") : "";
+  document.getElementById("servicioOrden").value =
+    item ? (item.orden || 0) : 0;
+  document.getElementById("servicioActivo").checked =
+    item ? Number(item.activo) === 1 : true;
+}
+
+function cerrarFormularioServicio(){
+  document.getElementById("formularioServicio").style.display = "none";
+}
+
+async function guardarServicio(){
+  const id = Number(document.getElementById("servicioId").value);
+  const nombre = document.getElementById("servicioNombre").value.trim();
+  const descripcion =
+    document.getElementById("servicioDescripcion").value.trim();
+  const categoria =
+    document.getElementById("servicioCategoria").value.trim();
+  const orden =
+    Number(document.getElementById("servicioOrden").value || 0);
+  const activo =
+    document.getElementById("servicioActivo").checked;
+
+  if(!nombre){
+    alert("El nombre del servicio es obligatorio.");
+    return;
+  }
+
+  const datos = {
+    nombre,
+    descripcion,
+    categoria,
+    orden,
+    activo
+  };
+
+  if(id){
+    datos.id = id;
+  }
+
+  try{
+    const respuesta = await fetch("/api/admin/servicios", {
+      method: id ? "PUT" : "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(datos)
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(
+        resultado.mensaje || "No se pudo guardar el servicio"
+      );
+    }
+
+    cerrarFormularioServicio();
+    await cargarServicios();
+
+  }catch(error){
+    alert("❌ " + error.message);
+  }
+}
+
+async function eliminarServicio(id, nombre){
+  if(!confirm("¿Eliminar el servicio '" + nombre + "'?")){
+    return;
+  }
+
+  try{
+    const respuesta = await fetch("/api/admin/servicios", {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(
+        resultado.mensaje || "No se pudo eliminar el servicio"
+      );
+    }
+
+    await cargarServicios();
+
+  }catch(error){
+    alert("❌ " + error.message);
+  }
+}
+
 async function cargarServicios(){
   const lista = document.getElementById("listaServicios");
 
@@ -535,6 +674,16 @@ async function cargarServicios(){
         <strong>${escapeHtml(item.nombre)}</strong>
         <small>${escapeHtml(item.descripcion || "")}</small>
         <span class="precio">${escapeHtml(item.categoria || "Servicio")}</span>
+
+        <div class="acciones-item">
+          <button class="btn" onclick='mostrarFormularioServicio(${JSON.stringify(item)})'>
+            ✏️ Editar
+          </button>
+
+          <button class="btn peligro" onclick='eliminarServicio(${Number(item.id)}, ${JSON.stringify(item.nombre)})'>
+            🗑️ Eliminar
+          </button>
+        </div>
       `;
 
       lista.appendChild(tarjeta);

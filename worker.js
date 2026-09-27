@@ -259,6 +259,139 @@ export default {
       }
     }
 
+    // CREAR SERVICIO
+    if (url.pathname === "/api/admin/servicios" && request.method === "POST") {
+      try {
+        const datos = await request.json();
+
+        const nombre = String(datos.nombre || "").trim();
+        const descripcion = String(datos.descripcion || "").trim();
+        const categoria = String(datos.categoria || "").trim();
+        const activo = datos.activo === false ? 0 : 1;
+        const orden = Number(datos.orden || 0);
+
+        if (!nombre) {
+          return respuestaJson(
+            { ok: false, mensaje: "El nombre del servicio es obligatorio" },
+            400
+          );
+        }
+
+        await env.DB.prepare(`
+          INSERT INTO servicios
+          (nombre, descripcion, categoria, activo, orden)
+          VALUES (?, ?, ?, ?, ?)
+        `)
+          .bind(
+            nombre,
+            descripcion,
+            categoria,
+            activo,
+            orden
+          )
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: "Servicio creado correctamente"
+        }, 201);
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al crear servicio" },
+          500
+        );
+      }
+    }
+
+    // EDITAR SERVICIO
+    if (url.pathname === "/api/admin/servicios" && request.method === "PUT") {
+      try {
+        const datos = await request.json();
+
+        const id = Number(datos.id);
+        const nombre = String(datos.nombre || "").trim();
+        const descripcion = String(datos.descripcion || "").trim();
+        const categoria = String(datos.categoria || "").trim();
+        const activo = datos.activo === false ? 0 : 1;
+        const orden = Number(datos.orden || 0);
+
+        if (!id || !nombre) {
+          return respuestaJson(
+            { ok: false, mensaje: "ID y nombre son obligatorios" },
+            400
+          );
+        }
+
+        const resultado = await env.DB.prepare(`
+          UPDATE servicios
+          SET nombre = ?,
+              descripcion = ?,
+              categoria = ?,
+              activo = ?,
+              orden = ?,
+              actualizado_en = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `)
+          .bind(
+            nombre,
+            descripcion,
+            categoria,
+            activo,
+            orden,
+            id
+          )
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: resultado.meta.changes
+            ? "Servicio actualizado correctamente"
+            : "No se encontró el servicio"
+        });
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al actualizar servicio" },
+          500
+        );
+      }
+    }
+
+    // ELIMINAR SERVICIO
+    if (url.pathname === "/api/admin/servicios" && request.method === "DELETE") {
+      try {
+        const datos = await request.json();
+        const id = Number(datos.id);
+
+        if (!id) {
+          return respuestaJson(
+            { ok: false, mensaje: "ID inválido" },
+            400
+          );
+        }
+
+        const resultado = await env.DB.prepare(`
+          DELETE FROM servicios WHERE id = ?
+        `)
+          .bind(id)
+          .run();
+
+        return respuestaJson({
+          ok: true,
+          mensaje: resultado.meta.changes
+            ? "Servicio eliminado correctamente"
+            : "No se encontró el servicio"
+        });
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al eliminar servicio" },
+          500
+        );
+      }
+    }
+
     // LEER PRECIOS DESDE D1
     if (url.pathname === "/api/admin/precios" && request.method === "GET") {
       try {
