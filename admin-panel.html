@@ -193,10 +193,56 @@
       color:#a9c8d8;
       line-height:1.6;
     }
-  </style>
+
+/* ===== FONDOS FOTOGRÁFICOS GLOBALES ===== */
+
+.fondo-rotativo{
+  position:fixed;
+  inset:0;
+  z-index:-10;
+  overflow:hidden;
+  pointer-events:none;
+  background:#020914;
+}
+
+.fondo-slide{
+  position:absolute;
+  inset:0;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  opacity:0;
+  transition:opacity 1.2s ease-in-out;
+}
+
+.fondo-slide.activo{
+  opacity:1;
+}
+
+#fondoRotativo1{
+  background-image:url("./fondos/fondo-1.jpg");
+}
+
+#fondoRotativo2{
+  background-image:url("./fondos/fondo-2.jpg");
+}
+
+#fondoRotativo3{
+  background-image:url("./fondos/fondo-3.jpg");
+}
+
+</style>
 </head>
 
+
 <body>
+
+<div class="fondo-rotativo" aria-hidden="true">
+  <div class="fondo-slide activo" id="fondoRotativo1"></div>
+  <div class="fondo-slide" id="fondoRotativo2"></div>
+  <div class="fondo-slide" id="fondoRotativo3"></div>
+</div>
+
 
 <main class="panel">
 
@@ -709,6 +755,25 @@ function escapeHtml(valor){
 document.getElementById("btnSalir").addEventListener("click", function(){
   window.location.href = "/api/admin/logout";
 });
+</script>
+
+
+<script>
+(function(){
+  const fondos = [
+    document.getElementById("fondoRotativo1"),
+    document.getElementById("fondoRotativo2"),
+    document.getElementById("fondoRotativo3")
+  ];
+
+  let actual = 0;
+
+  setInterval(function(){
+    fondos[actual].classList.remove("activo");
+    actual = (actual + 1) % fondos.length;
+    fondos[actual].classList.add("activo");
+  }, 4000);
+})();
 </script>
 
 </body>
