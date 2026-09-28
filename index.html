@@ -1351,7 +1351,18 @@ body{
   }
 
   .rb-nav-links{
-    display:none;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+
+  .rb-nav-links a{
+    font-size:.78rem;
+    padding:10px 0;
+  }
+
+  .rb-nav-links a::after{
+    bottom:3px;
   }
 
   .rb-brand-text{
@@ -2027,19 +2038,42 @@ body{
   document.getElementById('btnGoogle').addEventListener('click', function(){
     console.log('GOOGLE: botón presionado');
 
-    auth.signInWithPopup(provider)
-      .then(function(result){
-        console.log('GOOGLE: inicio exitoso', result.user);
-      })
-      .catch(function(error){
-        console.error('GOOGLE ERROR:', error);
-        alert(
-          'No se pudo iniciar sesión con Google.\\n\\n' +
-          'Código: ' + error.code + '\\n' +
-          'Mensaje: ' + error.message
-        );
-      });
+    var esMovil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if(esMovil){
+      console.log('GOOGLE: usando redirección móvil');
+      auth.signInWithRedirect(provider);
+    }else{
+      console.log('GOOGLE: usando ventana emergente');
+      auth.signInWithPopup(provider)
+        .then(function(result){
+          console.log('GOOGLE: inicio exitoso', result.user);
+        })
+        .catch(function(error){
+          console.error('GOOGLE ERROR:', error);
+          alert(
+            'No se pudo iniciar sesión con Google.\n\n' +
+            'Código: ' + error.code + '\n' +
+            'Mensaje: ' + error.message
+          );
+        });
+    }
   });
+
+  auth.getRedirectResult()
+    .then(function(result){
+      if(result && result.user){
+        console.log('GOOGLE REDIRECT: inicio exitoso', result.user);
+      }
+    })
+    .catch(function(error){
+      console.error('GOOGLE REDIRECT ERROR:', error);
+      alert(
+        'No se pudo completar el inicio con Google.\n\n' +
+        'Código: ' + error.code + '\n' +
+        'Mensaje: ' + error.message
+      );
+    });
 
   document.getElementById('btnSalir').addEventListener('click', function(){
     auth.signOut();
