@@ -31,6 +31,7 @@ html{
 
 body{
   background:#020914;
+  position:relative;
 
   font-family:'Segoe UI',Arial,sans-serif;
   color:var(--texto);
@@ -43,7 +44,7 @@ body{
 .fondo-rotativo{
   position:fixed;
   inset:0;
-  z-index:-10;
+  z-index:0;
   overflow:hidden;
   pointer-events:none;
   background:#020914;
@@ -81,7 +82,7 @@ body{
 .fondo-animado{
   position:fixed;
   inset:0;
-  z-index:-5;
+  z-index:1;
   pointer-events:none;
   background:rgba(2,9,20,.12);
 }
@@ -1219,11 +1220,7 @@ body{
    ========================================================== */
 
 #contenidoApp{
-  background:
-    radial-gradient(circle at 15% 5%,rgba(0,157,255,.12),transparent 30%),
-    radial-gradient(circle at 85% 25%,rgba(0,217,255,.08),transparent 28%),
-    linear-gradient(180deg,#031426,#061b2d 55%,#03111f);
-
+  background:transparent;
   min-height:100vh;
 }
 
@@ -1660,7 +1657,7 @@ body{
           y acceder a todas las funciones de Refrigeración Barinas.
         </p>
 
-        <button class="btn-google" id="btnGoogle" onclick="alert('CLICK DIRECTO FUNCIONA')">
+        <button class="btn-google" id="btnGoogle">
           <svg width="20" height="20" viewBox="0 0 48 48">
             <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
             <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
@@ -2022,14 +2019,11 @@ body{
     messagingSenderId: "258676469624",
     appId: "1:258676469624:web:bc06795d895841dcd8228d"
   };
-  alert('PASO 1: Firebase llegó a initializeApp');
   firebase.initializeApp(firebaseConfig);
-  alert('PASO 2: initializeApp terminó correctamente');
 
   const auth = firebase.auth();
-  alert('PASO 3: firebase.auth() funciona');
   const provider = new firebase.auth.GoogleAuthProvider();
-  alert('PASO 4: GoogleAuthProvider funciona');
+
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -2039,12 +2033,20 @@ body{
   const fotoUsuario = document.getElementById('fotoUsuario');
   const nombreUsuario = document.getElementById('nombreUsuario');
 
-  alert('PASO 5: JavaScript llegó al addEventListener de Google');
+  let googleLoginEnCurso = false;
 
   document.getElementById('btnGoogle').addEventListener('click', function(){
-    alert('DIAGNÓSTICO: el botón Google SÍ está funcionando');
+    if (googleLoginEnCurso) {
+      console.log('GOOGLE: inicio ya en curso');
+      return;
+    }
 
-    console.log('GOOGLE: botón presionado');
+    googleLoginEnCurso = true;
+
+    const botonGoogle = document.getElementById('btnGoogle');
+    botonGoogle.disabled = true;
+
+    console.log('GOOGLE: iniciando sesión');
 
     auth.signInWithPopup(provider)
       .then(function(result){
@@ -2053,11 +2055,17 @@ body{
       .catch(function(error){
         console.error('GOOGLE ERROR:', error);
 
-        var mensaje = 'No se pudo iniciar sesión con Google.\n\n' +
-          'Código: ' + (error.code || 'sin código') + '\n' +
-          'Mensaje: ' + (error.message || 'sin mensaje');
-
-        alert(mensaje);
+        if (error.code !== 'auth/popup-closed-by-user') {
+          alert(
+            'No se pudo iniciar sesión con Google.\n\n' +
+            'Código: ' + (error.code || 'sin código') + '\n' +
+            'Mensaje: ' + (error.message || 'sin mensaje')
+          );
+        }
+      })
+      .finally(function(){
+        googleLoginEnCurso = false;
+        botonGoogle.disabled = false;
       });
   });
 
