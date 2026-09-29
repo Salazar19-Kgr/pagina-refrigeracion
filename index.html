@@ -2036,6 +2036,8 @@ body{
   const nombreUsuario = document.getElementById('nombreUsuario');
 
   document.getElementById('btnGoogle').addEventListener('click', function(){
+    alert('DIAGNÓSTICO: el botón Google SÍ está funcionando');
+
     console.log('GOOGLE: botón presionado');
 
     auth.signInWithPopup(provider)
