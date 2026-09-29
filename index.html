@@ -2022,10 +2022,14 @@ body{
     messagingSenderId: "258676469624",
     appId: "1:258676469624:web:bc06795d895841dcd8228d"
   };
+  alert('PASO 1: Firebase llegó a initializeApp');
   firebase.initializeApp(firebaseConfig);
+  alert('PASO 2: initializeApp terminó correctamente');
 
   const auth = firebase.auth();
+  alert('PASO 3: firebase.auth() funciona');
   const provider = new firebase.auth.GoogleAuthProvider();
+  alert('PASO 4: GoogleAuthProvider funciona');
   provider.setCustomParameters({
     prompt: 'select_account'
   });
@@ -2034,6 +2038,8 @@ body{
   const contenidoApp = document.getElementById('contenidoApp');
   const fotoUsuario = document.getElementById('fotoUsuario');
   const nombreUsuario = document.getElementById('nombreUsuario');
+
+  alert('PASO 5: JavaScript llegó al addEventListener de Google');
 
   document.getElementById('btnGoogle').addEventListener('click', function(){
     alert('DIAGNÓSTICO: el botón Google SÍ está funcionando');
