@@ -1519,6 +1519,13 @@ body{
 </style>
 </head>
 <body>
+<style>
+/* CONTENIDO SOBRE FONDOS */
+body > *:not(.fondo-rotativo):not(.fondo-animado){
+  position:relative;
+  z-index:2;
+}
+</style>
 
 <div class="fondo-rotativo" aria-hidden="true">
   <div class="fondo-slide activo" id="fondoRotativo1"></div>
