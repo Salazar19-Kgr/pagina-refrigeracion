@@ -438,6 +438,176 @@ export default {
       }
     }
 
+    // ==========================================================
+    // TRABAJOS REALIZADOS - R2
+    // ==========================================================
+
+    // LISTAR TRABAJOS PARA ADMIN
+    if (url.pathname === "/api/admin/trabajos" && request.method === "GET") {
+      const cookie = obtenerCookie(request, COOKIE_NAME);
+
+      if (!await sesionValida(cookie, env.ADMIN_SESSION_SECRET)) {
+        return respuestaJson(
+          { ok: false, mensaje: "No autorizado" },
+          401
+        );
+      }
+
+      try {
+        const resultado = await env.TRABAJOS.list();
+
+        return respuestaJson({
+          ok: true,
+          trabajos: resultado.objects.map(objeto => ({
+            key: objeto.key,
+            url: `/trabajos/${encodeURIComponent(objeto.key)}`
+          }))
+        });
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al consultar trabajos" },
+          500
+        );
+      }
+    }
+
+    // SUBIR TRABAJO A R2
+    if (url.pathname === "/api/admin/trabajos" && request.method === "POST") {
+      const cookie = obtenerCookie(request, COOKIE_NAME);
+
+      if (!await sesionValida(cookie, env.ADMIN_SESSION_SECRET)) {
+        return respuestaJson(
+          { ok: false, mensaje: "No autorizado" },
+          401
+        );
+      }
+
+      try {
+        const formulario = await request.formData();
+        const archivo = formulario.get("foto");
+
+        if (!archivo || typeof archivo === "string") {
+          return respuestaJson(
+            { ok: false, mensaje: "No se recibió ninguna fotografía" },
+            400
+          );
+        }
+
+        if (!archivo.type || !archivo.type.startsWith("image/")) {
+          return respuestaJson(
+            { ok: false, mensaje: "El archivo debe ser una imagen" },
+            400
+          );
+        }
+
+        if (archivo.size > 10 * 1024 * 1024) {
+          return respuestaJson(
+            { ok: false, mensaje: "La imagen no puede superar 10 MB" },
+            400
+          );
+        }
+
+        const extension = archivo.name.includes(".")
+          ? archivo.name.substring(archivo.name.lastIndexOf(".")).toLowerCase()
+          : "";
+
+        const nombre = `trabajo-${crypto.randomUUID()}${extension}`;
+
+        await env.TRABAJOS.put(nombre, archivo.stream(), {
+          httpMetadata: {
+            contentType: archivo.type,
+            cacheControl: "public, max-age=31536000, immutable"
+          }
+        });
+
+        return respuestaJson({
+          ok: true,
+          mensaje: "Fotografía subida correctamente",
+          trabajo: {
+            key: nombre,
+            url: `/trabajos/${encodeURIComponent(nombre)}`
+          }
+        }, 201);
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al subir la fotografía" },
+          500
+        );
+      }
+    }
+
+    // ELIMINAR TRABAJO DE R2
+    if (url.pathname === "/api/admin/trabajos" && request.method === "DELETE") {
+      const cookie = obtenerCookie(request, COOKIE_NAME);
+
+      if (!await sesionValida(cookie, env.ADMIN_SESSION_SECRET)) {
+        return respuestaJson(
+          { ok: false, mensaje: "No autorizado" },
+          401
+        );
+      }
+
+      try {
+        const datos = await request.json();
+        const key = String(datos.key || "").trim();
+
+        if (!key) {
+          return respuestaJson(
+            { ok: false, mensaje: "Archivo inválido" },
+            400
+          );
+        }
+
+        await env.TRABAJOS.delete(key);
+
+        return respuestaJson({
+          ok: true,
+          mensaje: "Fotografía eliminada correctamente"
+        });
+
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al eliminar la fotografía" },
+          500
+        );
+      }
+    }
+
+    // MOSTRAR TRABAJO DESDE R2
+    if (url.pathname.startsWith("/trabajos/") && request.method === "GET") {
+      try {
+        const key = decodeURIComponent(
+          url.pathname.substring("/trabajos/".length)
+        );
+
+        if (!key || key.includes("..")) {
+          return new Response("Archivo inválido", { status: 400 });
+        }
+
+        const objeto = await env.TRABAJOS.get(key);
+
+        if (!objeto) {
+          return new Response("Fotografía no encontrada", {
+            status: 404
+          });
+        }
+
+        const headers = new Headers();
+        objeto.writeHttpMetadata(headers);
+        headers.set("Cache-Control", "public, max-age=31536000, immutable");
+
+        return new Response(objeto.body, {
+          headers
+        });
+
+      } catch (error) {
+        return new Response("Error al cargar fotografía", {
+          status: 500
+        });
+      }
+    }
+
     // LEER PRECIOS PÚBLICOS DESDE D1
     if (url.pathname === "/api/precios" && request.method === "GET") {
       try {

@@ -383,13 +383,27 @@
 
   <section id="contenido" class="seccion">
     <div class="seccion-header">
-      <h2>📋 Contenido</h2>
+      <h2>📸 Trabajos realizados</h2>
       <button class="btn volver" onclick="volverMenu()">← Volver</button>
     </div>
 
-    <div class="nota">
-      Esta sección queda preparada para la siguiente etapa de administración
-      del contenido de la página.
+    <div class="form-admin">
+      <h3>Agregar trabajo</h3>
+
+      <label for="fotoTrabajo">Seleccionar fotografía</label>
+      <input id="fotoTrabajo" type="file" accept="image/*">
+
+      <button class="btn" id="btnSubirTrabajo" type="button" onclick="subirTrabajo()">
+        ☁️ Subir fotografía
+      </button>
+
+      <div id="mensajeTrabajo" class="nota">
+        Las fotografías se almacenarán en R2.
+      </div>
+    </div>
+
+    <div id="listaTrabajos" class="lista">
+      <div class="nota">No hay fotografías cargadas todavía.</div>
     </div>
   </section>
 
@@ -415,6 +429,10 @@ function mostrarSeccion(nombre){
 
   if(nombre === "servicios"){
     cargarServicios();
+  }
+
+  if(nombre === "contenido"){
+    cargarTrabajos();
   }
 }
 
@@ -740,6 +758,142 @@ async function cargarServicios(){
       '<div class="nota">❌ No se pudieron cargar los servicios. ' +
       escapeHtml(error.message) +
       '</div>';
+  }
+}
+
+async function subirTrabajo(){
+  const input = document.getElementById("fotoTrabajo");
+  const mensaje = document.getElementById("mensajeTrabajo");
+  const boton = document.getElementById("btnSubirTrabajo");
+
+  if(!input.files || input.files.length === 0){
+    alert("Selecciona una fotografía primero.");
+    return;
+  }
+
+  const archivo = input.files[0];
+
+  boton.disabled = true;
+  boton.textContent = "☁️ Subiendo...";
+  mensaje.textContent = "Subiendo fotografía a R2...";
+
+  try{
+    const formulario = new FormData();
+    formulario.append("foto", archivo);
+
+    const respuesta = await fetch("/api/admin/trabajos", {
+      method: "POST",
+      credentials: "same-origin",
+      body: formulario
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(
+        resultado.mensaje || "No se pudo subir la fotografía"
+      );
+    }
+
+    input.value = "";
+    mensaje.textContent = "✅ Fotografía subida correctamente.";
+    await cargarTrabajos();
+
+  }catch(error){
+    mensaje.textContent = "❌ " + error.message;
+  }finally{
+    boton.disabled = false;
+    boton.textContent = "☁️ Subir fotografía";
+  }
+}
+
+async function cargarTrabajos(){
+  const lista = document.getElementById("listaTrabajos");
+
+  lista.innerHTML = '<div class="nota">Cargando fotografías...</div>';
+
+  try{
+    const respuesta = await fetch("/api/admin/trabajos", {
+      credentials: "same-origin"
+    });
+
+    const datos = await respuesta.json();
+
+    if(!respuesta.ok || !datos.ok){
+      throw new Error(
+        datos.mensaje || "No se pudieron cargar las fotografías"
+      );
+    }
+
+    if(!datos.trabajos || datos.trabajos.length === 0){
+      lista.innerHTML =
+        '<div class="nota">No hay fotografías cargadas todavía.</div>';
+      return;
+    }
+
+    lista.innerHTML = "";
+
+    datos.trabajos.forEach(function(item){
+      const tarjeta = document.createElement("div");
+      tarjeta.className = "item";
+
+      tarjeta.innerHTML = `
+        <img
+          src="${escapeHtml(item.url)}"
+          alt="Trabajo realizado"
+          style="width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-bottom:12px;"
+        >
+
+        <small>${escapeHtml(item.key)}</small>
+
+        <div class="acciones-item">
+          <button
+            class="btn peligro"
+            onclick='eliminarTrabajo(${JSON.stringify(item.key)})'
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
+      `;
+
+      lista.appendChild(tarjeta);
+    });
+
+  }catch(error){
+    lista.innerHTML =
+      '<div class="nota">❌ No se pudieron cargar las fotografías. ' +
+      escapeHtml(error.message) +
+      '</div>';
+  }
+}
+
+async function eliminarTrabajo(key){
+  if(!confirm("¿Eliminar esta fotografía de Trabajos realizados?")){
+    return;
+  }
+
+  try{
+    const respuesta = await fetch("/api/admin/trabajos", {
+      method: "DELETE",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ key })
+    });
+
+    const resultado = await respuesta.json();
+
+    if(!respuesta.ok || !resultado.ok){
+      throw new Error(
+        resultado.mensaje || "No se pudo eliminar la fotografía"
+      );
+    }
+
+    await cargarTrabajos();
+
+  }catch(error){
+    alert("❌ " + error.message);
   }
 }
 
