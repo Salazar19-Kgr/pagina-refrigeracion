@@ -12,5 +12,11 @@
       "binding": "DB",
       "database_id": "13e37767-df5e-4a5a-8407-0fb359d68bfd"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "TRABAJOS",
+      "bucket_name": "refrigeracion-barinas-fotos"
+    }
   ]
 }
