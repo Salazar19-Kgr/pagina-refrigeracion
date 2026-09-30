@@ -438,6 +438,30 @@ export default {
       }
     }
 
+    // LEER PRECIOS PÚBLICOS DESDE D1
+    if (url.pathname === "/api/precios" && request.method === "GET") {
+      try {
+        const { results } = await env.DB
+          .prepare(`
+            SELECT id, nombre, descripcion, precio, precio_texto, orden
+            FROM precios
+            WHERE activo = 1
+            ORDER BY orden ASC, id ASC
+          `)
+          .all();
+
+        return respuestaJson({
+          ok: true,
+          precios: results
+        });
+      } catch (error) {
+        return respuestaJson(
+          { ok: false, mensaje: "Error al consultar precios públicos" },
+          500
+        );
+      }
+    }
+
     // CERRAR SESIÓN DE ADMINISTRACIÓN
     if (url.pathname === "/api/admin/logout") {
       return new Response(null, {

@@ -1750,23 +1750,23 @@ body{
       <div class="card">
         <h3>🌀 Aire acondicionado Split</h3>
         <ul>
-          <li>Mantenimiento (12000–24000 BTU) <span class="precio">$40 – $60</span></li>
-          <li>Instalación de split nuevo <span class="precio">$50</span></li>
+          <li>Mantenimiento (12000–24000 BTU) <span class="precio" data-precio-nombre="Mantenimiento (12000–24000 BTU)">$40 – $60</span></li>
+          <li>Instalación de split nuevo <span class="precio" data-precio-nombre="Instalación de split nuevo">$50</span></li>
         </ul>
       </div>
 
       <div class="card">
         <h3>🪟 Aire acondicionado de ventana</h3>
         <ul>
-          <li>Mantenimiento / revisión <span class="precio">$30</span></li>
+          <li>Mantenimiento / revisión <span class="precio" data-precio-nombre="Mantenimiento / revisión">$30</span></li>
         </ul>
       </div>
 
       <div class="card">
         <h3>🧊 Neveras</h3>
         <ul>
-          <li>Cambio de motor (mano de obra) <span class="precio">$40</span></li>
-          <li>Sistema eléctrico (reloj, resistencia, bimetálico, tarjeta) <span class="precio">$25 – $70</span></li>
+          <li>Cambio de motor (mano de obra) <span class="precio" data-precio-nombre="Cambio de motor (mano de obra)">$40</span></li>
+          <li>Sistema eléctrico (reloj, resistencia, bimetálico, tarjeta) <span class="precio" data-precio-nombre="Sistema eléctrico (reloj, resistencia, bimetálico, tarjeta)">$25 – $70</span></li>
         </ul>
       </div>
 
@@ -1774,14 +1774,14 @@ body{
         <h3>🌀 Lavadoras</h3>
         <ul>
           <li>Mantenimiento <span class="precio">$30</span></li>
-          <li>Reparación / reemplazo de componentes <span class="precio">$30 – $70</span></li>
+          <li>Reparación / reemplazo de componentes <span class="precio" data-precio-nombre="Reparación / reemplazo de componentes">$30 – $70</span></li>
         </ul>
       </div>
 
       <div class="card">
         <h3>🔧 Otros equipos de refrigeración</h3>
         <ul>
-          <li>Servicio técnico general <span class="precio">$20</span></li>
+          <li>Servicio técnico general <span class="precio" data-precio-nombre="Servicio técnico general">$20</span></li>
         </ul>
       </div>
 
@@ -2151,5 +2151,49 @@ body{
   }, 4000);
 })();
 </script>
+
+<script>
+(async function cargarPreciosPublicos(){
+  try{
+    const respuesta = await fetch("/api/precios", {
+      cache: "no-store"
+    });
+
+    const datos = await respuesta.json();
+
+    if(!respuesta.ok || !datos.ok || !Array.isArray(datos.precios)){
+      console.error("PRECIOS:", datos.mensaje || "No se pudieron cargar");
+      return;
+    }
+
+    const mapa = new Map();
+
+    datos.precios.forEach(function(item){
+      mapa.set(String(item.nombre).trim(), item);
+    });
+
+    document.querySelectorAll("[data-precio-nombre]").forEach(function(elemento){
+      const nombre = elemento.getAttribute("data-precio-nombre");
+      const item = mapa.get(nombre);
+
+      if(!item) return;
+
+      const texto = String(item.precio_texto || "").trim();
+
+      if(texto){
+        elemento.textContent = texto;
+      }else if(Number(item.precio) > 0){
+        elemento.textContent = "$" + Number(item.precio).toFixed(0);
+      }else{
+        elemento.textContent = "Consultar";
+      }
+    });
+
+  }catch(error){
+    console.error("PRECIOS ERROR:", error);
+  }
+})();
+</script>
+
 </body>
 </html>
